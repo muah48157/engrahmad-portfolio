@@ -28,7 +28,6 @@ export default function Footer() {
         <div className="footer-meta">
           <a href={contact.portfolio.href}>{contact.portfolio.label}</a>
           <p>© {currentYear} Muhammad Ahmad</p>
-          <p>Built with Next.js and TypeScript</p>
         </div>
       </div>
     </footer>

@@ -25,7 +25,7 @@ export default function Contact() {
         <div className="contact-actions">
           <p className="contact-availability">
             <span aria-hidden="true" />
-            Open to remote and relocation opportunities
+            Open to remote
           </p>
 
           <a className="contact-email" href={contact.email.href}>
