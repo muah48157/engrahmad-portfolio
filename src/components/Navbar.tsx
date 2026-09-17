@@ -1,14 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import ThemeToggle from "@/components/ThemeToggle";
+import { trackEvent } from "@/lib/analytics";
 
 const navigation = [
-  { label: "About", href: "#about" },
-  { label: "Experience", href: "#experience" },
-  { label: "Projects", href: "#projects" },
-  { label: "Skills", href: "#skills" },
-  { label: "Contact", href: "#contact" },
+  { label: "Projects", href: "/#projects" },
+  { label: "Experience", href: "/#experience" },
+  { label: "Skills", href: "/#skills" },
+  { label: "Case Studies", href: "/#case-studies" },
+  { label: "Achievements", href: "/#achievements" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export default function Navbar() {
@@ -86,9 +89,9 @@ export default function Navbar() {
         className={`site-header ${isScrolled || isOpen ? "site-header--active" : ""}`}
       >
         <nav className="site-container navbar" aria-label="Primary navigation">
-          <a
+          <Link
             className="brand"
-            href="#main-content"
+            href="/#main-content"
             tabIndex={isOpen ? -1 : undefined}
             onClick={closeMenu}
           >
@@ -96,22 +99,26 @@ export default function Navbar() {
               MA
             </span>
             <span className="brand-name">Muhammad Ahmad</span>
-          </a>
+          </Link>
 
           <div className="navbar-controls">
             <div className="desktop-navigation">
               <ul className="nav-links" role="list">
                 {navigation.map((item) => (
                   <li key={item.href}>
-                    <a className="nav-link" href={item.href}>
+                    <Link className="nav-link" href={item.href}>
                       {item.label}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
-              <a className="nav-cta" href="#contact">
+              <Link
+                className="nav-cta"
+                href="/#contact"
+                onClick={() => trackEvent("email_click", { location: "navbar_cta" })}
+              >
                 Let&apos;s Talk
-              </a>
+              </Link>
             </div>
 
             <ThemeToggle />
@@ -183,24 +190,37 @@ export default function Navbar() {
             <ul role="list">
               {navigation.map((item) => (
                 <li key={item.href}>
-                  <a href={item.href} onClick={closeMenu}>
+                  <Link href={item.href} onClick={closeMenu}>
                     {item.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </nav>
 
-          <a className="mobile-nav-cta" href="#contact" onClick={closeMenu}>
+          <Link
+            className="mobile-nav-cta"
+            href="/#contact"
+            onClick={() => {
+              closeMenu();
+              trackEvent("email_click", { location: "navbar_mobile_cta" });
+            }}
+          >
             Let&apos;s Talk
             <span aria-hidden="true">↗</span>
-          </a>
+          </Link>
 
           <a
             className="mobile-nav-resume"
             href="/resume.pdf"
             download="Muhammad_Ahmad_Resume.pdf"
-            onClick={closeMenu}
+            onClick={() => {
+              closeMenu();
+              trackEvent("resume_download", {
+                mode: "download",
+                location: "navbar_mobile",
+              });
+            }}
             aria-label="Download Muhammad Ahmad's Resume (PDF)"
           >
             <span>Download Resume</span>

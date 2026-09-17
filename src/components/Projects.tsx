@@ -1,7 +1,11 @@
-import Image from "next/image";
-import { projects, type FeaturedProject } from "@/data/projects";
+"use client";
 
-function ProjectVisual({ project, index }: { project: FeaturedProject; index: number }) {
+import Link from "next/link";
+import Image from "next/image";
+import { featuredProjects, type ProjectItem } from "@/data/projects";
+import { trackEvent } from "@/lib/analytics";
+
+function ProjectVisual({ project, index }: { project: ProjectItem; index: number }) {
   return (
     <div
       className={`project-case-study__visual project-visual--${project.visual} ${
@@ -39,8 +43,8 @@ function ProjectVisual({ project, index }: { project: FeaturedProject; index: nu
             <span />
           </div>
           <div className="project-visual__signal">
-            {Array.from({ length: 9 }, (_, index) => (
-              <span key={index} />
+            {Array.from({ length: 9 }, (_, idx) => (
+              <span key={idx} />
             ))}
           </div>
         </div>
@@ -60,19 +64,19 @@ export default function Projects() {
         <header className="featured-projects-intro">
           <p className="section-kicker">
             <span>03</span>
-            Projects
+            Featured Projects
           </p>
           <h2 id="projects-title" className="section-title">
-            Selected work across mobile, backend, and product engineering.
+            Flagship production applications across mobile, APIs, and product delivery.
           </h2>
           <p>
-            Production-focused products demonstrating mobile architecture, store delivery,
-            platform integrations, and hands-on backend collaboration.
+            Key mobile products demonstrating scalable architecture, dual-store release
+            management, platform integrations, and hands-on backend execution.
           </p>
         </header>
 
         <ol className="featured-projects-list">
-          {projects.map((project, index) => (
+          {featuredProjects.map((project, index) => (
             <li className="featured-project-item" key={project.id}>
               <article className="project-case-study" aria-labelledby={`${project.id}-title`}>
                 <div className="project-case-study__content">
@@ -120,10 +124,28 @@ export default function Projects() {
                         <li key={technology}>{technology}</li>
                       ))}
                     </ul>
-                    <p className="project-case-study__status">
-                      <span aria-hidden="true" />
-                      {project.status}
-                    </p>
+
+                    <div className="project-case-study__actions">
+                      {project.caseStudyPath && (
+                        <Link
+                          href={project.caseStudyPath}
+                          className="project-case-study__case-study-link"
+                          onClick={() =>
+                            trackEvent("case_study_open", {
+                              project_id: project.id,
+                              source: "featured_card",
+                            })
+                          }
+                        >
+                          Read Full Case Study
+                          <span aria-hidden="true">→</span>
+                        </Link>
+                      )}
+                      <p className="project-case-study__status">
+                        <span aria-hidden="true" />
+                        {project.links?.label || project.status}
+                      </p>
+                    </div>
                   </div>
                 </div>
 
@@ -136,4 +158,3 @@ export default function Projects() {
     </section>
   );
 }
-

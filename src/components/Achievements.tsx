@@ -39,7 +39,7 @@ export default function Achievements() {
       <div className="site-container">
         <header className="achievements-intro">
           <p className="section-kicker">
-            <span>05</span>
+            <span>08</span>
             Achievements
           </p>
           <h2 id="achievements-title" className="section-title">

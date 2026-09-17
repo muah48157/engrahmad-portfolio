@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import WebVitalsReporter from "@/components/WebVitalsReporter";
 import "./globals.css";
 
 const siteUrl = "https://engrahmad.com";
@@ -12,34 +13,19 @@ const themeScript = `(function(){var theme="light";try{var saved=localStorage.ge
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: siteTitle,
   description: siteDescription,
-  keywords: [
-    "Muhammad Ahmad",
-    "Flutter Developer",
-    "Mobile Software Engineer",
-    "Flutter Developer Pakistan",
-    "Dart Developer",
-    "Mobile App Developer",
-    "Android Developer",
-    "iOS Developer",
-    "Flutter BLoC",
-    "BLoC",
-    "Cubit",
-    "REST API",
-    "Firebase",
-    "Supabase",
-    "Cross-Platform Development",
-  ],
   authors: [{ name: "Muhammad Ahmad", url: siteUrl }],
   creator: "Muhammad Ahmad",
   alternates: {
@@ -52,11 +38,20 @@ export const metadata: Metadata = {
     siteName: "Muhammad Ahmad",
     title: siteTitle,
     description: siteDescription,
+    images: [
+      {
+        url: `${siteUrl}/og-image.jpg`,
+        width: 1200,
+        height: 630,
+        alt: siteTitle,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: siteTitle,
     description: siteDescription,
+    images: [`${siteUrl}/og-image.jpg`],
   },
   robots: {
     index: true,
@@ -71,6 +66,36 @@ export const metadata: Metadata = {
   },
 };
 
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Muhammad Ahmad",
+  jobTitle: "Flutter Developer & Mobile Software Engineer",
+  url: siteUrl,
+  image: `${siteUrl}/og-image.jpg`,
+  email: "mailto:muah48157@gmail.com",
+  sameAs: [
+    "https://www.linkedin.com/in/muhammad-ahmad5556/",
+    "https://github.com/muah48157",
+  ],
+  knowsAbout: [
+    "Flutter",
+    "Dart",
+    "Mobile Application Development",
+    "Android Development",
+    "iOS Development",
+    "BLoC",
+    "Cubit",
+    "REST APIs",
+    "Firebase",
+    "Supabase",
+  ],
+  worksFor: {
+    "@type": "Organization",
+    name: "Bulk Bytes",
+  },
+};
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
@@ -81,8 +106,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+        />
       </head>
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <WebVitalsReporter />
+        {children}
+      </body>
     </html>
   );
 }

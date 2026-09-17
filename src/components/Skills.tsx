@@ -15,7 +15,7 @@ export default function Skills() {
       <div className="site-container">
         <header className="skills-intro">
           <p className="section-kicker">
-            <span>04</span>
+            <span>05</span>
             Skills
           </p>
           <h2 id="skills-title" className="section-title">

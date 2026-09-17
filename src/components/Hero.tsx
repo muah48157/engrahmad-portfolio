@@ -1,3 +1,7 @@
+"use client";
+
+import { trackEvent } from "@/lib/analytics";
+
 const credibility = [
   "Production Mobile Apps",
   "Android & iOS Deployment",
@@ -13,10 +17,10 @@ export default function Hero() {
       <div className="hero-grid" aria-hidden="true" />
       <div className="site-container hero-layout">
         <div className="hero-content">
-          <p className="hero-eyebrow">
-            <span />
-            Hello, I&apos;m
-          </p>
+          <div className="hero-availability">
+            <span className="hero-availability__dot" aria-hidden="true" />
+            <span>Open to remote opportunities worldwide</span>
+          </div>
 
           <h1 id="hero-title" className="hero-heading">
             Muhammad Ahmad
@@ -40,20 +44,48 @@ export default function Hero() {
           </p>
 
           <div className="hero-actions">
-            <a className="button button--primary" href="#projects">
+            <a
+              className="button button--primary"
+              href="#projects"
+              onClick={() => trackEvent("project_open", { location: "hero_primary" })}
+            >
               View My Work
               <span aria-hidden="true">↗</span>
             </a>
+            <div className="hero-resume-group">
+              <a
+                className="button button--secondary"
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() =>
+                  trackEvent("resume_download", { mode: "view", location: "hero" })
+                }
+              >
+                View Resume
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a
+                className="button button--secondary hero-resume-download"
+                href="/resume.pdf"
+                download="Muhammad_Ahmad_Resume.pdf"
+                aria-label="Download Muhammad Ahmad's Resume (PDF)"
+                title="Download Resume PDF"
+                onClick={() =>
+                  trackEvent("resume_download", { mode: "download", location: "hero" })
+                }
+              >
+                <span className="download-mark" aria-hidden="true">
+                  ↓
+                </span>
+                Download
+              </a>
+            </div>
             <a
-              className="button button--secondary"
-              href="/resume.pdf"
-              download="Muhammad_Ahmad_Resume.pdf"
-              aria-label="Download Muhammad Ahmad's Resume (PDF)"
+              className="text-link"
+              href="#contact"
+              onClick={() => trackEvent("email_click", { location: "hero_talk" })}
             >
-              Download Resume
-              <span className="download-mark" aria-hidden="true">↓</span>
-            </a>
-            <a className="text-link" href="#contact">
               Let&apos;s Talk
               <span aria-hidden="true">↗</span>
             </a>
@@ -75,7 +107,11 @@ export default function Hero() {
           <div className="phone-frame" aria-hidden="true">
             <div className="phone-topbar">
               <span>9:41</span>
-              <div><i /><i /><i /></div>
+              <div>
+                <i />
+                <i />
+                <i />
+              </div>
             </div>
             <div className="phone-appbar">
               <span className="phone-logo">M</span>
@@ -94,8 +130,14 @@ export default function Hero() {
               <span className="chart-line chart-line--five" />
             </div>
             <div className="phone-modules">
-              <span><i />Payments</span>
-              <span><i />Maps</span>
+              <span>
+                <i />
+                Payments
+              </span>
+              <span>
+                <i />
+                Maps
+              </span>
             </div>
           </div>
           <div className="architecture-card architecture-card--release" aria-hidden="true">

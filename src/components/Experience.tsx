@@ -10,15 +10,15 @@ export default function Experience() {
       <div className="site-container">
         <div className="experience-intro">
           <p className="section-kicker">
-            <span>02</span>
+            <span>04</span>
             Experience
           </p>
           <h2 id="experience-title" className="section-title">
-            Production work, built with ownership.
+            Production engineering & delivery ownership.
           </h2>
           <p>
-            Selected mobile products delivered across architecture, integrations, platform
-            services, store release, and ongoing production improvement.
+            Professional software engineering tenure focused on cross-platform mobile delivery,
+            dual-store release lifecycles, mobile-backend boundaries, and team practices.
           </p>
         </div>
 
@@ -38,12 +38,36 @@ export default function Experience() {
               </header>
 
               <div className="experience-overview">
-                <p>{entry.summary}</p>
-                <ul className="capability-list" role="list" aria-label="Role capabilities">
-                  {entry.capabilities.map((capability) => (
-                    <li key={capability}>{capability}</li>
-                  ))}
-                </ul>
+                <div>
+                  <p className="experience-summary-lead">{entry.summary}</p>
+                  {entry.responsibilities && (
+                    <div className="experience-responsibilities">
+                      <span className="experience-responsibilities__title">
+                        Core Engineering Scope:
+                      </span>
+                      <ul className="experience-responsibilities__list">
+                        {entry.responsibilities.map((resp) => (
+                          <li key={resp}>{resp}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+
+                <div className="experience-capabilities-panel">
+                  <span className="experience-capabilities-panel__label">
+                    Engineering Domains
+                  </span>
+                  <ul className="capability-list" role="list" aria-label="Role capabilities">
+                    {entry.capabilities.map((capability) => (
+                      <li key={capability}>{capability}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <div className="experience-delivered-banner">
+                <span>Key Products Delivered at Bulk Bytes</span>
               </div>
 
               <div className="project-grid">
@@ -52,7 +76,7 @@ export default function Experience() {
                     <header className="project-header">
                       <div>
                         <span className="project-number" aria-hidden="true">
-                          Project 0{index + 1}
+                          0{index + 1}
                         </span>
                         <h4>{project.name}</h4>
                       </div>
@@ -74,7 +98,11 @@ export default function Experience() {
                       ))}
                     </ul>
 
-                    <ul className="stack-list" role="list" aria-label={`${project.name} technologies`}>
+                    <ul
+                      className="stack-list"
+                      role="list"
+                      aria-label={`${project.name} technologies`}
+                    >
                       {project.stack.map((technology) => (
                         <li key={technology}>{technology}</li>
                       ))}
