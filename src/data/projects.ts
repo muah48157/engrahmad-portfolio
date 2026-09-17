@@ -11,6 +11,9 @@ export type FeaturedProject = {
   status: string;
   visual: ProjectVisual;
   visualLabel: string;
+  icon?: string;
+  image?: string;
+  imageAlt?: string;
 };
 
 export const projects: FeaturedProject[] = [
@@ -31,6 +34,9 @@ export const projects: FeaturedProject[] = [
     status: "Production app · Migration in progress",
     visual: "course",
     visualLabel: "Secure course delivery",
+    icon: "/projects/icons/mrcp-syndrome.svg",
+    image: "/projects/mrcp-syndrome.jpg",
+    imageAlt: "MRCP Syndrome medical learning course modules and protected video player mockup",
   },
   {
     id: "u-track-lite",
@@ -49,6 +55,9 @@ export const projects: FeaturedProject[] = [
     status: "Google Play · 1K+ downloads",
     visual: "tracking",
     visualLabel: "Live route telemetry",
+    icon: "/projects/icons/u-track-lite.svg",
+    image: "/projects/u-track-lite.jpg",
+    imageAlt: "U-Track Lite live fleet telemetry and route tracking map interface",
   },
   {
     id: "kaims",
@@ -67,6 +76,9 @@ export const projects: FeaturedProject[] = [
     status: "Google Play release",
     visual: "campus",
     visualLabel: "Academic operations",
+    icon: "/projects/icons/kaims.svg",
+    image: "/projects/kaims.jpg",
+    imageAlt: "KAIMS University Management System student schedule and portal interface",
   },
   {
     id: "dys-diyosa",
@@ -85,6 +97,9 @@ export const projects: FeaturedProject[] = [
     status: "Production app",
     visual: "commerce",
     visualLabel: "Media-led commerce",
+    icon: "/projects/icons/dys-diyosa.svg",
+    image: "/projects/dys-diyosa.jpg",
+    imageAlt: "DYS / Diyosa luxury watch catalog and mobile media commerce interface",
   },
   {
     id: "clinnote-ai",
@@ -103,5 +118,8 @@ export const projects: FeaturedProject[] = [
     status: "Client-used product",
     visual: "clinical",
     visualLabel: "Audio to clinical report",
+    icon: "/projects/icons/clinnote-ai.svg",
+    image: "/projects/clinnote-ai.jpg",
+    imageAlt: "ClinNote AI desktop medical audio waveform and clinical transcription software",
   },
 ];

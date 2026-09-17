@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80" fill="none">
+  <defs>
+    <linearGradient id="clinnote-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#064e3b" />
+      <stop offset="100%" stop-color="#022c22" />
+    </linearGradient>
+    <linearGradient id="clinnote-accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <filter id="glow-clinnote" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#10b981" flood-opacity="0.35" />
+    </filter>
+  </defs>
+  <!-- App Icon Squircle -->
+  <rect width="80" height="80" rx="18" fill="url(#clinnote-bg)" />
+  <rect x="1" y="1" width="78" height="78" rx="17" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" />
+  
+  <!-- Audio Waveform + AI Note Sparkle -->
+  <g filter="url(#glow-clinnote)">
+    <!-- Audio Waveform Bars -->
+    <rect x="20" y="36" width="4" height="8" rx="2" fill="url(#clinnote-accent)" opacity="0.6" />
+    <rect x="28" y="28" width="4" height="24" rx="2" fill="url(#clinnote-accent)" />
+    <rect x="36" y="20" width="4" height="40" rx="2" fill="url(#clinnote-accent)" />
+    <rect x="44" y="26" width="4" height="28" rx="2" fill="url(#clinnote-accent)" />
+    <rect x="52" y="34" width="4" height="12" rx="2" fill="url(#clinnote-accent)" opacity="0.75" />
+    <!-- AI Sparkle -->
+    <path d="M58 20L60 25L65 27L60 29L58 34L56 29L51 27L56 25L58 20Z" fill="#a7f3d0" />
+  </g>
+</svg>

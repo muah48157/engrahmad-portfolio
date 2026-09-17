@@ -1,33 +1,50 @@
+import Image from "next/image";
 import { projects, type FeaturedProject } from "@/data/projects";
 
 function ProjectVisual({ project, index }: { project: FeaturedProject; index: number }) {
   return (
     <div
-      className={`project-case-study__visual project-visual--${project.visual}`}
-      aria-hidden="true"
+      className={`project-case-study__visual project-visual--${project.visual} ${
+        project.image ? "project-case-study__visual--has-image" : ""
+      }`}
     >
       <div className="project-visual__topbar">
         <span className="project-visual__indicator" />
         <span>{project.visualLabel}</span>
         <span className="project-visual__mode">0{index + 1}</span>
       </div>
-      <div className="project-visual__canvas">
-        <div className="project-visual__primary">
-          <span className="project-visual__primary-line" />
-          <span className="project-visual__primary-line" />
-          <span className="project-visual__primary-line" />
+
+      {project.image ? (
+        <div className="project-visual__media">
+          <Image
+            src={project.image}
+            alt={project.imageAlt || `${project.title} showcase mockup`}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 45vw"
+            className="project-visual__img"
+            priority={index === 0}
+          />
+          <div className="project-visual__overlay" aria-hidden="true" />
         </div>
-        <div className="project-visual__secondary">
-          <span />
-          <span />
-          <span />
+      ) : (
+        <div className="project-visual__canvas" aria-hidden="true">
+          <div className="project-visual__primary">
+            <span className="project-visual__primary-line" />
+            <span className="project-visual__primary-line" />
+            <span className="project-visual__primary-line" />
+          </div>
+          <div className="project-visual__secondary">
+            <span />
+            <span />
+            <span />
+          </div>
+          <div className="project-visual__signal">
+            {Array.from({ length: 9 }, (_, index) => (
+              <span key={index} />
+            ))}
+          </div>
         </div>
-        <div className="project-visual__signal">
-          {Array.from({ length: 9 }, (_, index) => (
-            <span key={index} />
-          ))}
-        </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -59,12 +76,27 @@ export default function Projects() {
             <li className="featured-project-item" key={project.id}>
               <article className="project-case-study" aria-labelledby={`${project.id}-title`}>
                 <div className="project-case-study__content">
-                  <div className="project-case-study__meta">
-                    <span className="project-case-study__number">0{index + 1}</span>
-                    <span className="project-case-study__category">{project.category}</span>
+                  <div className="project-case-study__header">
+                    {project.icon && (
+                      <div className="project-case-study__icon-wrapper">
+                        <Image
+                          src={project.icon}
+                          alt={`${project.title} app icon`}
+                          width={48}
+                          height={48}
+                          className="project-case-study__icon"
+                        />
+                      </div>
+                    )}
+                    <div className="project-case-study__header-text">
+                      <div className="project-case-study__meta">
+                        <span className="project-case-study__number">0{index + 1}</span>
+                        <span className="project-case-study__category">{project.category}</span>
+                      </div>
+                      <h3 id={`${project.id}-title`}>{project.title}</h3>
+                    </div>
                   </div>
 
-                  <h3 id={`${project.id}-title`}>{project.title}</h3>
                   <p className="project-case-study__summary">{project.summary}</p>
 
                   <div className="project-case-study__ownership">
@@ -104,3 +136,4 @@ export default function Projects() {
     </section>
   );
 }
+

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80" fill="none">
+  <defs>
+    <linearGradient id="mrcp-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f766e" />
+      <stop offset="100%" stop-color="#042f2e" />
+    </linearGradient>
+    <linearGradient id="mrcp-accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5eead4" />
+      <stop offset="100%" stop-color="#14b8a6" />
+    </linearGradient>
+    <filter id="glow-mrcp" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#14b8a6" flood-opacity="0.35" />
+    </filter>
+  </defs>
+  <!-- App Icon Squircle -->
+  <rect width="80" height="80" rx="18" fill="url(#mrcp-bg)" />
+  <rect x="1" y="1" width="78" height="78" rx="17" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" />
+  
+  <!-- Medical Stethoscope / Cross Icon -->
+  <g filter="url(#glow-mrcp)" stroke="url(#mrcp-accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Pulse Line & Heart Rhythm -->
+    <path d="M22 43h8l4-9 6 18 5-13 4 5h9" />
+    <!-- Medical Caduceus / Cross Indicator -->
+    <circle cx="40" cy="23" r="3.5" fill="url(#mrcp-accent)" />
+    <path d="M40 28v5" />
+  </g>
+</svg>

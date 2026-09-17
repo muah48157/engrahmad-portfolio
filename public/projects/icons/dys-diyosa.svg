@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80" fill="none">
+  <defs>
+    <linearGradient id="dys-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7c2d12" />
+      <stop offset="100%" stop-color="#1c1917" />
+    </linearGradient>
+    <linearGradient id="dys-accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#f97316" />
+    </linearGradient>
+    <filter id="glow-dys" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#f97316" flood-opacity="0.35" />
+    </filter>
+  </defs>
+  <!-- App Icon Squircle -->
+  <rect width="80" height="80" rx="18" fill="url(#dys-bg)" />
+  <rect x="1" y="1" width="78" height="78" rx="17" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" />
+  
+  <!-- Watch Dial & Luxury Media Emblem -->
+  <g filter="url(#glow-dys)" stroke="url(#dys-accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Watch Strap Attachments -->
+    <path d="M33 16h14M33 64h14" stroke-width="3" />
+    <path d="M35 16v6M45 16v6M35 58v6M45 58v6" stroke-width="2" />
+    <!-- Watch Case -->
+    <circle cx="40" cy="40" r="18" fill="rgba(251,191,36,0.15)" stroke-width="2.5" />
+    <!-- Watch Crown -->
+    <rect x="58" y="38" width="3" height="4" rx="1" fill="url(#dys-accent)" stroke="none" />
+    <!-- Clock Hands (10:10 luxury position) -->
+    <path d="M40 40L33 30M40 40L50 34" stroke-width="2.2" />
+    <circle cx="40" cy="40" r="2.5" fill="url(#dys-accent)" stroke="none" />
+  </g>
+</svg>

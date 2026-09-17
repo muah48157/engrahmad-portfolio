@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80" fill="none">
+  <defs>
+    <linearGradient id="kaims-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#581c87" />
+      <stop offset="100%" stop-color="#1e1b4b" />
+    </linearGradient>
+    <linearGradient id="kaims-accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c084fc" />
+      <stop offset="100%" stop-color="#a855f7" />
+    </linearGradient>
+    <filter id="glow-kaims" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#a855f7" flood-opacity="0.35" />
+    </filter>
+  </defs>
+  <!-- App Icon Squircle -->
+  <rect width="80" height="80" rx="18" fill="url(#kaims-bg)" />
+  <rect x="1" y="1" width="78" height="78" rx="17" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" />
+  
+  <!-- Graduation Cap & Academic Emblem -->
+  <g filter="url(#glow-kaims)" stroke="url(#kaims-accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Cap top (diamond) -->
+    <path d="M40 25L60 35L40 45L20 35L40 25Z" fill="rgba(192,132,252,0.2)" />
+    <!-- Cap skullcap underside -->
+    <path d="M26 40v9c0 4.5 6.5 8 14 8s14-3.5 14-8v-9" />
+    <!-- Tassel -->
+    <path d="M57 37v15" stroke-width="2" />
+    <circle cx="57" cy="53" r="2" fill="url(#kaims-accent)" />
+  </g>
+</svg>
