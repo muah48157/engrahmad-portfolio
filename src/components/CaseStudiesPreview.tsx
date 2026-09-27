@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { featuredProjects } from "@/data/projects";
 import { trackEvent } from "@/lib/analytics";
 
@@ -31,9 +32,21 @@ export default function CaseStudiesPreview() {
             <li className="case-study-preview-card" key={project.id}>
               <article aria-labelledby={`cs-preview-${project.id}`}>
                 <div className="case-study-preview-card__header">
-                  <span className="case-study-preview-card__number" aria-hidden="true">
-                    0{index + 1}
-                  </span>
+                  {project.icon ? (
+                    <div className="case-study-preview-card__icon-wrapper">
+                      <Image
+                        src={project.icon}
+                        alt={`${project.title} app icon`}
+                        width={36}
+                        height={36}
+                        className="case-study-preview-card__icon"
+                      />
+                    </div>
+                  ) : (
+                    <span className="case-study-preview-card__number" aria-hidden="true">
+                      0{index + 1}
+                    </span>
+                  )}
                   <p className="case-study-preview-card__category">{project.category}</p>
                 </div>
 

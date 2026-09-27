@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { projects } from "@/data/projects";
+import { isMobileProject, projects } from "@/data/projects";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -71,6 +71,9 @@ export default async function CaseStudyPage({ params }: Props) {
   }
 
   const { caseStudy } = project;
+  const isDesktop = !isMobileProject(project);
+  const allScreenshots = project.galleryScreenshots || [];
+  const galleryScreenshots = allScreenshots.filter((shot) => shot.path !== project.image);
 
   const appCategory =
     project.category.includes("Medical") || project.category.includes("Clinical")
@@ -89,7 +92,7 @@ export default async function CaseStudyPage({ params }: Props) {
     name: project.title,
     description: project.summary,
     applicationCategory: appCategory,
-    operatingSystem: project.category.includes("Desktop") ? "Desktop" : "Mobile",
+    operatingSystem: isDesktop ? "Desktop" : "Mobile",
     author: {
       "@type": "Person",
       name: "Muhammad Ahmad",
@@ -156,7 +159,13 @@ export default async function CaseStudyPage({ params }: Props) {
 
           {/* Visual Showcase Media */}
           {project.image && (
-            <figure className="case-study-showcase-media">
+            <figure
+              className={`case-study-showcase-media ${
+                isDesktop
+                  ? "case-study-showcase-media--desktop"
+                  : "case-study-showcase-media--mobile"
+              }`}
+            >
               <div className="case-study-showcase-media__topbar">
                 <span className="project-visual__indicator" aria-hidden="true" />
                 <span>{project.visualLabel}</span>
@@ -165,7 +174,7 @@ export default async function CaseStudyPage({ params }: Props) {
               <div className="case-study-showcase-media__canvas">
                 <Image
                   src={project.image}
-                  alt={project.imageAlt || `${project.title} production interface mockup`}
+                  alt={project.imageAlt || `${project.title} production interface`}
                   fill
                   sizes="(max-width: 1200px) 100vw, 76rem"
                   className="case-study-showcase-media__img"
@@ -278,6 +287,62 @@ export default async function CaseStudyPage({ params }: Props) {
                 ))}
               </ul>
             </section>
+
+            {/* 6. Production Interface Gallery */}
+            {galleryScreenshots.length > 0 && (
+              <section
+                className="case-study-section case-study-gallery-section"
+                aria-labelledby="section-gallery"
+              >
+                <div className="case-study-section__header">
+                  <span className="section-kicker">
+                    <span>06</span>
+                    Interface Gallery
+                  </span>
+                  <h2 id="section-gallery" className="case-study-section__title">
+                    Production Application Workflows
+                  </h2>
+                </div>
+                <p className="case-study-section__lead">
+                  Authentic product screens and application workflows captured directly from the
+                  running production builds.
+                </p>
+
+                <div
+                  className={`case-study-gallery-grid ${
+                    isDesktop
+                      ? "case-study-gallery-grid--desktop"
+                      : "case-study-gallery-grid--mobile"
+                  }`}
+                >
+                  {galleryScreenshots.map((shot, idx) => (
+                    <figure key={shot.path} className="case-study-gallery-card">
+                      <div className="case-study-gallery-card__media">
+                        <Image
+                          src={shot.path}
+                          alt={shot.alt}
+                          width={shot.width}
+                          height={shot.height}
+                          sizes={
+                            isDesktop
+                              ? "(max-width: 768px) 100vw, 50vw"
+                              : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          }
+                          className="case-study-gallery-card__img"
+                          loading="lazy"
+                        />
+                      </div>
+                      <figcaption className="case-study-gallery-card__caption">
+                        <span className="case-study-gallery-card__index" aria-hidden="true">
+                          0{idx + 1}
+                        </span>
+                        <span className="case-study-gallery-card__label">{shot.alt}</span>
+                      </figcaption>
+                    </figure>
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
 
           {/* Footer Actions */}

@@ -2,15 +2,28 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { featuredProjects, type ProjectItem } from "@/data/projects";
+import {
+  featuredProjects,
+  getProjectPresentation,
+  type ProjectItem,
+} from "@/data/projects";
 import { trackEvent } from "@/lib/analytics";
 
 function ProjectVisual({ project, index }: { project: ProjectItem; index: number }) {
+  const presentation = getProjectPresentation(project);
+  const isMobile = presentation.isMobile;
+
   return (
     <div
       className={`project-case-study__visual project-visual--${project.visual} ${
         project.image ? "project-case-study__visual--has-image" : ""
-      }`}
+      } ${isMobile ? "project-visual--mobile" : "project-visual--desktop"}`}
+      style={
+        {
+          "--screenshot-ratio": `${presentation.aspectRatio}`,
+          "--visual-max-width": presentation.maxWidth,
+        } as React.CSSProperties
+      }
     >
       <div className="project-visual__topbar">
         <span className="project-visual__indicator" />
@@ -22,9 +35,13 @@ function ProjectVisual({ project, index }: { project: ProjectItem; index: number
         <div className="project-visual__media">
           <Image
             src={project.image}
-            alt={project.imageAlt || `${project.title} showcase mockup`}
+            alt={project.imageAlt || `${project.title} interface view`}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 45vw"
+            sizes={
+              isMobile
+                ? "(max-width: 768px) 85vw, 320px"
+                : "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 45vw"
+            }
             className="project-visual__img"
             priority={index === 0}
           />

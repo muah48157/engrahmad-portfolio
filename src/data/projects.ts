@@ -22,6 +22,15 @@ export type CaseStudyDetail = {
   outcomes: string[];
 };
 
+export type ProjectScreenshot = {
+  path: string;
+  alt: string;
+  width: number;
+  height: number;
+};
+
+export type ProjectPlatform = "mobile" | "desktop";
+
 export type ProjectItem = {
   id: string;
   title: string;
@@ -33,9 +42,14 @@ export type ProjectItem = {
   status: string;
   visual: ProjectVisual;
   visualLabel: string;
+  platform?: ProjectPlatform;
   icon?: string;
   image?: string;
   imageAlt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  gallery?: string[];
+  galleryScreenshots?: ProjectScreenshot[];
   isFeatured: boolean;
   caseStudyPath?: string;
   links?: ProjectLinks;
@@ -44,6 +58,56 @@ export type ProjectItem = {
 
 // Backward-compatible alias for existing components
 export type FeaturedProject = ProjectItem;
+
+export function isMobileProject(project: ProjectItem): boolean {
+  if (project.platform === "desktop") return false;
+  if (project.platform === "mobile") return true;
+  if (
+    project.id === "clinnote-ai" ||
+    project.technologies.includes("Tauri") ||
+    project.category.toLowerCase().includes("desktop")
+  ) {
+    return false;
+  }
+  if (project.imageWidth && project.imageHeight) {
+    return project.imageWidth / project.imageHeight < 1.0;
+  }
+  return true;
+}
+
+export function getProjectPresentation(project: ProjectItem) {
+  const isMobile = isMobileProject(project);
+  const width = project.imageWidth || (isMobile ? 720 : 1920);
+  const height = project.imageHeight || (isMobile ? 1600 : 1080);
+  const aspectRatio = width / height;
+
+  // On desktop screens, mobile frames target a visually balanced height (~37.5rem / 600px)
+  // so the phone is large, readable, and proportional to its exact aspect ratio
+  const mobileMaxWidthRem = Number((37.5 * aspectRatio).toFixed(2));
+
+  return {
+    isMobile,
+    width,
+    height,
+    aspectRatio,
+    maxWidth: isMobile ? `min(${mobileMaxWidthRem}rem, 85vw)` : "100%",
+  };
+}
+
+export function getProjectGallery(project: ProjectItem): ProjectScreenshot[] {
+  if (project.galleryScreenshots && project.galleryScreenshots.length > 0) {
+    return project.galleryScreenshots;
+  }
+  if (project.gallery && project.gallery.length > 0) {
+    return project.gallery.map((path, idx) => ({
+      path,
+      alt: `${project.title} interface view 0${idx + 1}`,
+      width: 720,
+      height: 1600,
+    }));
+  }
+  return [];
+}
 
 export const projects: ProjectItem[] = [
   {
@@ -63,9 +127,65 @@ export const projects: ProjectItem[] = [
     status: "Production app · Migration in progress",
     visual: "course",
     visualLabel: "Secure course delivery",
-    icon: "/projects/icons/mrcp-syndrome.svg",
-    image: "/projects/mrcp-syndrome.jpg",
-    imageAlt: "MRCP Syndrome medical learning course modules and protected video player mockup",
+    platform: "mobile",
+    icon: "/projects/mrcp-syndrome/icon-web.png",
+    image: "/projects/mrcp-syndrome/1.jpeg",
+    imageAlt: "MRCP Syndrome medical course catalog screen with filter tabs, course cards, ratings, and bottom navigation",
+    imageWidth: 720,
+    imageHeight: 1600,
+    gallery: [
+      "/projects/mrcp-syndrome/1.jpeg",
+      "/projects/mrcp-syndrome/2.jpeg",
+      "/projects/mrcp-syndrome/3.jpeg",
+      "/projects/mrcp-syndrome/4.jpeg",
+      "/projects/mrcp-syndrome/5.jpeg",
+      "/projects/mrcp-syndrome/6.jpeg",
+      "/projects/mrcp-syndrome/7.jpeg",
+    ],
+    galleryScreenshots: [
+      {
+        path: "/projects/mrcp-syndrome/1.jpeg",
+        alt: "MRCP Syndrome medical course catalog screen with filter tabs, course cards, ratings, and navigation",
+        width: 720,
+        height: 1600,
+      },
+      {
+        path: "/projects/mrcp-syndrome/2.jpeg",
+        alt: "MRCP Syndrome course detail and subscription pricing packages selection screen",
+        width: 720,
+        height: 1600,
+      },
+      {
+        path: "/projects/mrcp-syndrome/3.jpeg",
+        alt: "MRCP Syndrome shopping cart and checkout order summary screen",
+        width: 1080,
+        height: 2400,
+      },
+      {
+        path: "/projects/mrcp-syndrome/4.jpeg",
+        alt: "MRCP Syndrome My Learning screen with enrolled medical revision courses",
+        width: 720,
+        height: 1600,
+      },
+      {
+        path: "/projects/mrcp-syndrome/5.jpeg",
+        alt: "MRCP Syndrome user profile screen with biometric sign-in preferences",
+        width: 720,
+        height: 1600,
+      },
+      {
+        path: "/projects/mrcp-syndrome/6.jpeg",
+        alt: "MRCP Syndrome authentication login screen with biometric prompt",
+        width: 720,
+        height: 1600,
+      },
+      {
+        path: "/projects/mrcp-syndrome/7.jpeg",
+        alt: "MRCP Syndrome user registration and account creation screen",
+        width: 720,
+        height: 1600,
+      },
+    ],
     isFeatured: true,
     caseStudyPath: "/projects/mrcp-syndrome",
     links: {
@@ -112,9 +232,72 @@ export const projects: ProjectItem[] = [
     status: "Google Play · 1K+ downloads",
     visual: "tracking",
     visualLabel: "Live route telemetry",
-    icon: "/projects/icons/u-track-lite.svg",
-    image: "/projects/u-track-lite.jpg",
-    imageAlt: "U-Track Lite live fleet telemetry and route tracking map interface",
+    platform: "mobile",
+    icon: "/projects/u-track-lite/icon.webp",
+    image: "/projects/u-track-lite/4.webp",
+    imageAlt: "U-Track Lite real-time vehicle telemetry screen with speedometer, RPM gauge, and live GPS map tracking",
+    imageWidth: 135,
+    imageHeight: 296,
+    gallery: [
+      "/projects/u-track-lite/1.webp",
+      "/projects/u-track-lite/2.webp",
+      "/projects/u-track-lite/3.webp",
+      "/projects/u-track-lite/4.webp",
+      "/projects/u-track-lite/5.webp",
+      "/projects/u-track-lite/6.webp",
+      "/projects/u-track-lite/7.webp",
+      "/projects/u-track-lite/8.webp",
+    ],
+    galleryScreenshots: [
+      {
+        path: "/projects/u-track-lite/4.webp",
+        alt: "U-Track Lite live telemetry screen with speedometer, RPM gauge, and GPS map tracking",
+        width: 135,
+        height: 296,
+      },
+      {
+        path: "/projects/u-track-lite/1.webp",
+        alt: "U-Track Lite login screen with server selector and vehicle graphics",
+        width: 136,
+        height: 296,
+      },
+      {
+        path: "/projects/u-track-lite/2.webp",
+        alt: "U-Track Lite fleet dashboard with moving, idle, parked, and offline status counters",
+        width: 134,
+        height: 296,
+      },
+      {
+        path: "/projects/u-track-lite/3.webp",
+        alt: "U-Track Lite map view with vehicle route breadcrumbs and waypoint history",
+        width: 136,
+        height: 296,
+      },
+      {
+        path: "/projects/u-track-lite/5.webp",
+        alt: "U-Track Lite language selection screen supporting English, Urdu, and Arabic",
+        width: 135,
+        height: 296,
+      },
+      {
+        path: "/projects/u-track-lite/6.webp",
+        alt: "U-Track Lite fleet vehicle list with live ignition and movement status badges",
+        width: 135,
+        height: 296,
+      },
+      {
+        path: "/projects/u-track-lite/7.webp",
+        alt: "U-Track Lite vehicle search and filter drawer interface",
+        width: 135,
+        height: 296,
+      },
+      {
+        path: "/projects/u-track-lite/8.webp",
+        alt: "U-Track Lite navigation menu drawer with user profile and quick access links",
+        width: 135,
+        height: 296,
+      },
+    ],
     isFeatured: true,
     caseStudyPath: "/projects/u-track-lite",
     links: {
@@ -160,9 +343,65 @@ export const projects: ProjectItem[] = [
     status: "Google Play release",
     visual: "campus",
     visualLabel: "Academic operations",
-    icon: "/projects/icons/kaims.svg",
-    image: "/projects/kaims.jpg",
-    imageAlt: "KAIMS University Management System student schedule and portal interface",
+    platform: "mobile",
+    icon: "/projects/kaims/icon.webp",
+    image: "/projects/kaims/4.webp",
+    imageAlt: "KAIMS My Courses academic management view with attendance, materials, quizzes, and planner modules",
+    imageWidth: 132,
+    imageHeight: 296,
+    gallery: [
+      "/projects/kaims/1.webp",
+      "/projects/kaims/2.webp",
+      "/projects/kaims/3.webp",
+      "/projects/kaims/4.webp",
+      "/projects/kaims/5.webp",
+      "/projects/kaims/6.webp",
+      "/projects/kaims/7.jpg",
+    ],
+    galleryScreenshots: [
+      {
+        path: "/projects/kaims/4.webp",
+        alt: "KAIMS My Courses academic view with attendance, course materials, quizzes, and planner modules",
+        width: 132,
+        height: 296,
+      },
+      {
+        path: "/projects/kaims/1.webp",
+        alt: "KAIMS multi-role login portal with student roll number authentication",
+        width: 134,
+        height: 296,
+      },
+      {
+        path: "/projects/kaims/2.webp",
+        alt: "KAIMS teacher login portal screen",
+        width: 132,
+        height: 296,
+      },
+      {
+        path: "/projects/kaims/3.webp",
+        alt: "KAIMS student dashboard with campus announcements and lecture schedule",
+        width: 132,
+        height: 296,
+      },
+      {
+        path: "/projects/kaims/5.webp",
+        alt: "KAIMS course materials repository with downloadable academic resources",
+        width: 132,
+        height: 296,
+      },
+      {
+        path: "/projects/kaims/6.webp",
+        alt: "KAIMS quizzes and assignments interface displaying active quiz deadlines",
+        width: 134,
+        height: 296,
+      },
+      {
+        path: "/projects/kaims/7.jpg",
+        alt: "KAIMS student assignments list with submission deadlines and marks",
+        width: 133,
+        height: 296,
+      },
+    ],
     isFeatured: true,
     caseStudyPath: "/projects/kaims",
     links: {
@@ -209,9 +448,65 @@ export const projects: ProjectItem[] = [
     status: "Client-used product",
     visual: "clinical",
     visualLabel: "Audio to clinical report",
-    icon: "/projects/icons/clinnote-ai.svg",
-    image: "/projects/clinnote-ai.jpg",
-    imageAlt: "ClinNote AI desktop medical audio waveform and clinical transcription software",
+    platform: "desktop",
+    icon: "/projects/clinnote-ai/icon.png",
+    image: "/projects/clinnote-ai/2.png",
+    imageAlt: "ClinNote AI desktop transcription workspace with Whisper model selector and real-time consultation transcription",
+    imageWidth: 1917,
+    imageHeight: 999,
+    gallery: [
+      "/projects/clinnote-ai/1.png",
+      "/projects/clinnote-ai/2.png",
+      "/projects/clinnote-ai/3.png",
+      "/projects/clinnote-ai/4.png",
+      "/projects/clinnote-ai/5.png",
+      "/projects/clinnote-ai/6.png",
+      "/projects/clinnote-ai/7.png",
+    ],
+    galleryScreenshots: [
+      {
+        path: "/projects/clinnote-ai/2.png",
+        alt: "ClinNote AI desktop transcription workspace with Whisper model selector and consultation notes",
+        width: 1917,
+        height: 999,
+      },
+      {
+        path: "/projects/clinnote-ai/1.png",
+        alt: "ClinNote AI desktop authentication login screen",
+        width: 1917,
+        height: 1006,
+      },
+      {
+        path: "/projects/clinnote-ai/3.png",
+        alt: "ClinNote AI live audio capture recording state with audio stream monitor",
+        width: 1917,
+        height: 1003,
+      },
+      {
+        path: "/projects/clinnote-ai/4.png",
+        alt: "ClinNote AI patient records management directory and encounter history",
+        width: 1918,
+        height: 1008,
+      },
+      {
+        path: "/projects/clinnote-ai/5.png",
+        alt: "ClinNote AI settings panel for clinic tokens and API configuration",
+        width: 1917,
+        height: 1008,
+      },
+      {
+        path: "/projects/clinnote-ai/6.png",
+        alt: "ClinNote AI report formats and clinical documentation template editor",
+        width: 1917,
+        height: 997,
+      },
+      {
+        path: "/projects/clinnote-ai/7.png",
+        alt: "ClinNote AI user roles and permissions configuration matrix",
+        width: 1917,
+        height: 1003,
+      },
+    ],
     isFeatured: true,
     caseStudyPath: "/projects/clinnote-ai",
     links: {
@@ -258,9 +553,58 @@ export const projects: ProjectItem[] = [
     status: "Production app",
     visual: "commerce",
     visualLabel: "Media-led commerce",
-    icon: "/projects/icons/dys-diyosa.svg",
-    image: "/projects/dys-diyosa.jpg",
-    imageAlt: "DYS / Diyosa luxury watch catalog and mobile media commerce interface",
+    platform: "mobile",
+    icon: "/projects/dys/icon.webp",
+    image: "/projects/dys/1.webp",
+    imageAlt: "DIYOSA Radio Watch & Shop mobile home screen with featured video stream and trending merchandise",
+    imageWidth: 325,
+    imageHeight: 724,
+    gallery: [
+      "/projects/dys/1.webp",
+      "/projects/dys/2.webp",
+      "/projects/dys/3.webp",
+      "/projects/dys/4.webp",
+      "/projects/dys/5.webp",
+      "/projects/dys/6.webp",
+    ],
+    galleryScreenshots: [
+      {
+        path: "/projects/dys/1.webp",
+        alt: "DIYOSA Radio Watch & Shop mobile home screen with featured video stream and trending merchandise",
+        width: 325,
+        height: 724,
+      },
+      {
+        path: "/projects/dys/2.webp",
+        alt: "DIYOSA Radio video playlist catalog with thumbnail stream feed",
+        width: 325,
+        height: 727,
+      },
+      {
+        path: "/projects/dys/3.webp",
+        alt: "DIYOSA Radio video player interface with streaming playback and related videos",
+        width: 328,
+        height: 721,
+      },
+      {
+        path: "/projects/dys/4.webp",
+        alt: "DIYOSA mobile shop merchandise catalog with product listings and pricing",
+        width: 325,
+        height: 724,
+      },
+      {
+        path: "/projects/dys/5.webp",
+        alt: "DIYOSA apparel product details view with size selector and add to cart action",
+        width: 325,
+        height: 724,
+      },
+      {
+        path: "/projects/dys/6.webp",
+        alt: "DIYOSA mobile checkout screen with Square payment integration",
+        width: 327,
+        height: 726,
+      },
+    ],
     isFeatured: false,
     links: {
       label: "Google Play Release",
@@ -283,6 +627,65 @@ export const projects: ProjectItem[] = [
     status: "Google Play release",
     visual: "utility",
     visualLabel: "Document workflow",
+    platform: "mobile",
+    icon: "/projects/quick-invoices/icon.webp",
+    image: "/projects/quick-invoices/5.jpeg",
+    imageAlt: "Quick Invoices dashboard with financial summary, invoice search, status filters, and invoice creation action",
+    imageWidth: 720,
+    imageHeight: 1600,
+    gallery: [
+      "/projects/quick-invoices/1.jpeg",
+      "/projects/quick-invoices/2.jpeg",
+      "/projects/quick-invoices/3.jpeg",
+      "/projects/quick-invoices/4.jpeg",
+      "/projects/quick-invoices/5.jpeg",
+      "/projects/quick-invoices/6.jpeg",
+      "/projects/quick-invoices/7.jpeg",
+    ],
+    galleryScreenshots: [
+      {
+        path: "/projects/quick-invoices/5.jpeg",
+        alt: "Quick Invoices dashboard with financial summary, invoice search, status filters, and creation action",
+        width: 720,
+        height: 1600,
+      },
+      {
+        path: "/projects/quick-invoices/1.jpeg",
+        alt: "Quick Invoices sign-in authentication screen",
+        width: 720,
+        height: 1600,
+      },
+      {
+        path: "/projects/quick-invoices/2.jpeg",
+        alt: "Quick Invoices settings and preferences screen with currency and organization controls",
+        width: 720,
+        height: 1600,
+      },
+      {
+        path: "/projects/quick-invoices/3.jpeg",
+        alt: "Quick Invoices estimate creation interface with client selection and itemized lines",
+        width: 720,
+        height: 1600,
+      },
+      {
+        path: "/projects/quick-invoices/4.jpeg",
+        alt: "Quick Invoices new invoice creation screen with due date and client entry",
+        width: 720,
+        height: 1600,
+      },
+      {
+        path: "/projects/quick-invoices/6.jpeg",
+        alt: "Quick Invoices Quick Report financial snapshot with payment breakdown gauge",
+        width: 720,
+        height: 1600,
+      },
+      {
+        path: "/projects/quick-invoices/7.jpeg",
+        alt: "Quick Invoices estimates management screen with status filtering",
+        width: 720,
+        height: 1600,
+      },
+    ],
     isFeatured: false,
     links: {
       label: "Google Play Release",

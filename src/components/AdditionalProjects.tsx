@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { additionalProjects } from "@/data/projects";
 
 export default function AdditionalProjects() {
@@ -27,9 +28,21 @@ export default function AdditionalProjects() {
             <li className="additional-project-card" key={project.id}>
               <article aria-labelledby={`add-proj-${project.id}`}>
                 <div className="additional-project-card__header">
-                  <span className="additional-project-card__number" aria-hidden="true">
-                    0{index + 1}
-                  </span>
+                  {project.icon ? (
+                    <div className="additional-project-card__icon-wrapper">
+                      <Image
+                        src={project.icon}
+                        alt={`${project.title} app icon`}
+                        width={40}
+                        height={40}
+                        className="additional-project-card__icon"
+                      />
+                    </div>
+                  ) : (
+                    <span className="additional-project-card__number" aria-hidden="true">
+                      0{index + 1}
+                    </span>
+                  )}
                   <p className="additional-project-card__category">{project.category}</p>
                 </div>
 
