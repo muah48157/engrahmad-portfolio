@@ -1,31 +1,17 @@
 const achievements = [
   {
-    label: "Product Reach",
-    value: "1K+",
-    detail: "Google Play downloads for U-Track Lite.",
-    metric: true,
-  },
-  {
-    label: "Performance",
-    value: "~40%",
-    detail: "Load-time improvement delivered for U-Track Lite.",
-    metric: true,
-  },
-  {
-    label: "Store Delivery",
-    value: "Android + iOS",
+    label: "Engineering Recognition",
+    value: "Bulk Bytes Honors",
     detail:
-      "Personally handled Google Play releases for multiple Flutter applications and the Apple App Store release for MRCP.",
+      "Awarded Employee of the Month and Overall Performance recognition for engineering execution and mobile delivery.",
+    metric: false,
   },
   {
-    label: "Team Leadership",
-    value: "4-member team",
-    detail: "Led the development team responsible for KAIMS mobile delivery.",
-  },
-  {
-    label: "Company Recognition",
-    value: "Recognized at Bulk Bytes",
-    detail: "Received Employee of the Month and Overall Performance recognition.",
+    label: "Store Release Lifecycle",
+    value: "Google Play & App Store",
+    detail:
+      "Managed end-to-end store publishing, signing, and review compliance across both Android and iOS ecosystems.",
+    metric: false,
   },
 ];
 
@@ -39,15 +25,15 @@ export default function Achievements() {
       <div className="site-container">
         <header className="achievements-intro">
           <p className="section-kicker">
-            <span>08</span>
-            Achievements
+            <span>07</span>
+            Recognition &amp; Milestones
           </p>
           <h2 id="achievements-title" className="section-title">
-            Outcomes that reflect real product ownership.
+            Verified engineering recognition and store publishing track record.
           </h2>
           <p>
-            A concise record of product reach, delivery responsibility, performance work,
-            leadership, and recognition earned while building production software.
+            Key workplace honors and delivery responsibility earned while architecting and
+            releasing production software.
           </p>
         </header>
 

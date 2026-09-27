@@ -32,15 +32,18 @@ export default function Hero() {
             <span>Mobile Software Engineer</span>
           </p>
 
+          <div className="hero-stack" aria-label="Core technologies">
+            <span className="hero-stack__item">Flutter</span>
+            <span className="hero-stack__item">Dart</span>
+            <span className="hero-stack__item">BLoC</span>
+            <span className="hero-stack__item">Firebase</span>
+            <span className="hero-stack__item">Node.js</span>
+          </div>
+
           <p className="hero-summary">
             I build production-ready mobile applications with Flutter, from scalable
-            architecture and APIs to payments, maps, backend integrations, and app-store
+            architecture and APIs to payments, maps, backend integrations, and dual-store
             deployment.
-          </p>
-
-          <p className="hero-proof">
-            From mobile architecture to production release, I build applications designed
-            for real users and real-world constraints.
           </p>
 
           <div className="hero-actions">

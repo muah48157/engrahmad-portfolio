@@ -189,7 +189,9 @@ export const projects: ProjectItem[] = [
     isFeatured: true,
     caseStudyPath: "/projects/mrcp-syndrome",
     links: {
-      label: "Google Play & Apple App Store Releases",
+      playStore: "https://play.google.com/store/apps/details?id=com.mrcpsyndrome.app",
+      demo: "https://www.mrcpsyndrome.co.uk",
+      label: "Google Play & Web Platform",
     },
     caseStudy: {
       challenge:
@@ -301,6 +303,7 @@ export const projects: ProjectItem[] = [
     isFeatured: true,
     caseStudyPath: "/projects/u-track-lite",
     links: {
+      playStore: "https://play.google.com/store/apps/details?id=com.utrack.lite",
       label: "Google Play Release · 1K+ Downloads",
     },
     caseStudy: {

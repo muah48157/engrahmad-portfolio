@@ -11,7 +11,7 @@ export default function AdditionalProjects() {
       <div className="site-container">
         <header className="additional-projects-intro">
           <p className="section-kicker">
-            <span>07</span>
+            <span>06</span>
             Additional Projects
           </p>
           <h2 id="additional-projects-title" className="section-title">

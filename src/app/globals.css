@@ -621,22 +621,35 @@ summary:focus-visible,
   color: var(--foreground);
 }
 
+.hero-stack {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 1.1rem;
+}
+
+.hero-stack__item {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface-subtle);
+  padding: 0.28rem 0.65rem;
+  color: var(--accent-strong);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.72rem;
+  font-weight: 550;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
 .hero-summary {
   max-width: 40rem;
-  margin: 1.6rem 0 0;
+  margin: 1.35rem 0 0;
   color: var(--muted-strong);
   font-size: clamp(0.98rem, 2.5vw, 1.12rem);
   line-height: 1.7;
-}
-
-.hero-proof {
-  max-width: 38rem;
-  margin: 1rem 0 0;
-  border-left: 2px solid var(--accent);
-  padding-left: 0.9rem;
-  color: var(--muted);
-  font-size: 0.88rem;
-  line-height: 1.65;
 }
 
 .hero-actions {
@@ -1596,6 +1609,34 @@ summary:focus-visible,
   background: var(--accent);
 }
 
+.project-case-study__architecture-core {
+  display: grid;
+  gap: 0.35rem;
+  max-width: 41rem;
+  margin-top: 1.15rem;
+  padding: 0.75rem 0.95rem;
+  border-radius: 0.45rem;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+}
+
+.project-case-study__architecture-label {
+  color: var(--accent-strong);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.project-case-study__architecture-core p {
+  margin: 0;
+  color: var(--muted-strong);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
 .project-case-study__footer {
   display: grid;
   gap: 0.85rem;
@@ -2497,13 +2538,8 @@ summary:focus-visible,
   }
 
   .project-case-study__footer {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: end;
-  }
-
-  .project-case-study__status {
-    justify-self: end;
-    text-align: right;
+    grid-template-columns: 1fr;
+    gap: 1.15rem;
   }
 
   .skills-capability-strip {
@@ -2523,10 +2559,7 @@ summary:focus-visible,
   .achievement-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     margin-top: 3.5rem;
-  }
-
-  .achievement-item:last-child {
-    grid-column: 1 / -1;
+    gap: 1.5rem;
   }
 
   .achievement-item {
@@ -2704,16 +2737,12 @@ summary:focus-visible,
   }
 
   .achievement-list {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
   }
 
   .achievement-item:nth-child(-n + 2) {
-    grid-column: span 3;
-  }
-
-  .achievement-item:nth-child(n + 3),
-  .achievement-item:last-child {
-    grid-column: span 2;
+    grid-column: span 1;
   }
 
   .contact-layout {
@@ -2954,6 +2983,97 @@ summary:focus-visible,
 .project-case-study__case-study-link:hover {
   color: var(--accent);
   gap: 0.55rem;
+}
+
+.project-case-study__links-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.project-case-study__live-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.24rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 0.35rem;
+  background: var(--surface-subtle);
+  color: var(--foreground);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.68rem;
+  font-weight: 550;
+  text-decoration: none;
+  transition: all 180ms ease;
+}
+
+.project-case-study__live-link:hover {
+  background: var(--control-background-hover);
+  border-color: var(--accent);
+  color: var(--accent-strong);
+  transform: translateY(-1px);
+}
+
+.testimonial-section {
+  padding: 3rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.testimonial-card {
+  position: relative;
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 2.25rem 2.5rem;
+  border-radius: 0.85rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: 0 10px 30px var(--shadow);
+}
+
+.testimonial-mark {
+  position: absolute;
+  top: 1rem;
+  left: 1.5rem;
+  font-family: serif;
+  font-size: 3.5rem;
+  line-height: 1;
+  color: var(--accent);
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.testimonial-content {
+  margin: 0;
+}
+
+.testimonial-quote p {
+  margin: 0;
+  color: var(--foreground);
+  font-size: clamp(1rem, 2.5vw, 1.15rem);
+  font-weight: 450;
+  line-height: 1.65;
+  font-style: italic;
+}
+
+.testimonial-author {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.testimonial-author strong {
+  color: var(--foreground);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.testimonial-author span {
+  color: var(--muted);
+  font-size: 0.82rem;
 }
 
 .case-studies-preview-section {

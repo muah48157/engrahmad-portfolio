@@ -17,7 +17,7 @@ export default function Contact() {
       <div className="site-container contact-layout">
         <div className="contact-copy">
           <p className="section-kicker">
-            <span>09</span>
+            <span>08</span>
             Contact
           </p>
           <h2 id="contact-title" className="contact-title">

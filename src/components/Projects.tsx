@@ -131,6 +131,15 @@ export default function Projects() {
                     ))}
                   </ul>
 
+                  {project.caseStudy?.architecture && project.caseStudy.architecture.length > 0 && (
+                    <div className="project-case-study__architecture-core">
+                      <span className="project-case-study__architecture-label">
+                        Architecture Core:
+                      </span>
+                      <p>{project.caseStudy.architecture[0]}</p>
+                    </div>
+                  )}
+
                   <div className="project-case-study__footer">
                     <ul
                       className="project-case-study__stack"
@@ -143,21 +152,61 @@ export default function Projects() {
                     </ul>
 
                     <div className="project-case-study__actions">
-                      {project.caseStudyPath && (
-                        <Link
-                          href={project.caseStudyPath}
-                          className="project-case-study__case-study-link"
-                          onClick={() =>
-                            trackEvent("case_study_open", {
-                              project_id: project.id,
-                              source: "featured_card",
-                            })
-                          }
-                        >
-                          Read Full Case Study
-                          <span aria-hidden="true">→</span>
-                        </Link>
-                      )}
+                      <div className="project-case-study__links-group">
+                        {project.caseStudyPath && (
+                          <Link
+                            href={project.caseStudyPath}
+                            className="project-case-study__case-study-link"
+                            onClick={() =>
+                              trackEvent("case_study_open", {
+                                project_id: project.id,
+                                source: "featured_card",
+                              })
+                            }
+                          >
+                            <span>Read Full Case Study</span>
+                            <span aria-hidden="true">→</span>
+                          </Link>
+                        )}
+
+                        {project.links?.playStore && (
+                          <a
+                            href={project.links.playStore}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="project-case-study__live-link"
+                            aria-label={`${project.title} on Google Play`}
+                            onClick={() =>
+                              trackEvent("google_play_click", {
+                                project_id: project.id,
+                              })
+                            }
+                          >
+                            <span>Google Play</span>
+                            <span aria-hidden="true">↗</span>
+                          </a>
+                        )}
+
+                        {project.links?.demo && (
+                          <a
+                            href={project.links.demo}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="project-case-study__live-link"
+                            aria-label={`${project.title} live platform`}
+                            onClick={() =>
+                              trackEvent("project_open", {
+                                project_id: project.id,
+                                source: "featured_live_platform",
+                              })
+                            }
+                          >
+                            <span>Live Platform</span>
+                            <span aria-hidden="true">↗</span>
+                          </a>
+                        )}
+                      </div>
+
                       <p className="project-case-study__status">
                         <span aria-hidden="true" />
                         {project.links?.label || project.status}

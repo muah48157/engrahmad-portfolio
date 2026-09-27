@@ -9,7 +9,6 @@ const navigation = [
   { label: "Projects", href: "/#projects" },
   { label: "Experience", href: "/#experience" },
   { label: "Skills", href: "/#skills" },
-  { label: "Case Studies", href: "/#case-studies" },
   { label: "Achievements", href: "/#achievements" },
   { label: "Contact", href: "/#contact" },
 ];
