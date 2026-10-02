@@ -1,11 +1,16 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { ArrowUpRight, Menu, X, Download } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import { trackEvent } from "@/lib/analytics";
+import { cn } from "@/lib/utils";
+import { Container } from "@/components/portfolio/primitives";
 
-const navigation = [
+const profile = { name: "Muhammad Ahmad", initials: "MA" };
+
+const navItems = [
   { label: "Projects", href: "/#projects" },
   { label: "Experience", href: "/#experience" },
   { label: "Skills", href: "/#skills" },
@@ -13,220 +18,200 @@ const navigation = [
   { label: "Contact", href: "/#contact" },
 ];
 
+export function Monogram({ className }: { className?: string }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        "flex size-8 items-center justify-center rounded-lg bg-primary text-[13px] font-semibold tracking-tight text-primary-foreground",
+        className,
+      )}
+    >
+      {profile.initials}
+    </span>
+  );
+}
+
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const mobileMenuRef = useRef<HTMLElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 16);
+    const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
-    if (!isOpen) return;
+    document.body.style.overflow = open ? "hidden" : "";
+    
+    if (open) {
+      const focusableElements = Array.from(
+        mobileMenuRef.current?.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled])',
+        ) ?? [],
+      );
+      focusableElements[0]?.focus();
+      
+      const handleKeyDown = (event: KeyboardEvent) => {
+        if (event.key === "Escape") {
+          setOpen(false);
+          menuButtonRef.current?.focus();
+          return;
+        }
 
-    const main = document.querySelector<HTMLElement>("main");
-    const previousBodyOverflow = document.body.style.overflow;
-    const previousHtmlOverflow = document.documentElement.style.overflow;
-    const wasMainInert = main?.inert ?? false;
-    const focusableElements = Array.from(
-      mobileMenuRef.current?.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled])',
-      ) ?? [],
-    );
+        if (event.key !== "Tab" || focusableElements.length === 0) return;
 
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
-    if (main) main.inert = true;
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
 
-    focusableElements[0]?.focus();
+        if (event.shiftKey && document.activeElement === firstElement) {
+          event.preventDefault();
+          lastElement.focus();
+        } else if (!event.shiftKey && document.activeElement === lastElement) {
+          event.preventDefault();
+          firstElement.focus();
+        }
+      };
+      
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [open]);
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsOpen(false);
-        menuButtonRef.current?.focus();
-        return;
-      }
-
-      if (event.key !== "Tab" || focusableElements.length === 0) return;
-
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
-
-      if (event.shiftKey && document.activeElement === firstElement) {
-        event.preventDefault();
-        lastElement.focus();
-      } else if (!event.shiftKey && document.activeElement === lastElement) {
-        event.preventDefault();
-        firstElement.focus();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = previousBodyOverflow;
-      document.documentElement.style.overflow = previousHtmlOverflow;
-      if (main) main.inert = wasMainInert;
-    };
-  }, [isOpen]);
-
-  const closeMenu = () => setIsOpen(false);
-  const closeMenuAndRestoreFocus = () => {
-    setIsOpen(false);
-    requestAnimationFrame(() => menuButtonRef.current?.focus());
-  };
+  const closeMenu = () => setOpen(false);
 
   return (
-    <>
-      <header
-        className={`site-header ${isScrolled || isOpen ? "site-header--active" : ""}`}
-      >
-        <nav className="site-container navbar" aria-label="Primary navigation">
+    <header
+      className={cn(
+        "sticky top-0 z-50 border-b transition-colors duration-300",
+        scrolled || open
+          ? "border-border bg-background/85 backdrop-blur-md"
+          : "border-transparent bg-background/0",
+      )}
+    >
+      <Container className="flex h-16 items-center justify-between gap-6">
+        <Link
+          href="/#main-content"
+          className="flex items-center gap-2.5 rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+          onClick={closeMenu}
+          tabIndex={open ? -1 : undefined}
+        >
+          <Monogram />
+          <span className="text-sm font-semibold tracking-tight text-foreground">
+            {profile.name}
+          </span>
+        </Link>
+
+        <nav aria-label="Primary" className="hidden lg:block">
+          <ul className="flex items-center gap-1">
+            {navItems.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className="rounded-full px-3 py-1.5 text-[13px] text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          
           <Link
-            className="brand"
-            href="/#main-content"
-            tabIndex={isOpen ? -1 : undefined}
-            onClick={closeMenu}
+            href="/#contact"
+            className="hidden h-9 items-center rounded-full bg-primary px-4 text-[13px] font-medium text-primary-foreground transition-all hover:-translate-y-0.5 hover:bg-primary/90 sm:inline-flex"
+            onClick={() => trackEvent("email_click", { location: "navbar_cta" })}
           >
-            <span className="brand-mark" aria-hidden="true">
-              MA
-            </span>
-            <span className="brand-name">Muhammad Ahmad</span>
+            Let&apos;s Talk
           </Link>
 
-          <div className="navbar-controls">
-            <div className="desktop-navigation">
-              <ul className="nav-links" role="list">
-                {navigation.map((item) => (
-                  <li key={item.href}>
-                    <Link className="nav-link" href={item.href}>
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <Link
-                className="nav-cta"
-                href="/#contact"
-                onClick={() => trackEvent("email_click", { location: "navbar_cta" })}
-              >
-                Let&apos;s Talk
-              </Link>
-            </div>
-
-            <ThemeToggle />
-
-            <button
-              ref={menuButtonRef}
-              className="menu-button"
-              type="button"
-              aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
-              aria-expanded={isOpen}
-              aria-controls="mobile-navigation"
-              onClick={() => setIsOpen((current) => !current)}
-            >
-              <span className="menu-button__label">{isOpen ? "Close" : "Menu"}</span>
-              <span
-                className={`menu-icon ${isOpen ? "menu-icon--open" : ""}`}
-                aria-hidden="true"
-              >
-                <span />
-                <span />
-              </span>
-            </button>
-          </div>
-        </nav>
-      </header>
+          <button
+            ref={menuButtonRef}
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+            className="flex size-10 items-center justify-center rounded-full border border-border bg-card text-foreground transition-colors hover:bg-accent lg:hidden"
+          >
+            {open ? (
+              <X className="size-4" aria-hidden="true" />
+            ) : (
+              <Menu className="size-4" aria-hidden="true" />
+            )}
+            <span className="sr-only">
+              {open ? "Close menu" : "Open menu"}
+            </span>
+          </button>
+        </div>
+      </Container>
 
       <div
-        className={`mobile-menu-layer ${isOpen ? "mobile-menu-layer--open" : ""}`}
-        aria-hidden={!isOpen}
+        id="mobile-nav"
+        ref={mobileMenuRef}
+        hidden={!open}
+        className="fixed inset-x-0 top-16 bottom-0 overflow-y-auto border-t border-border bg-background lg:hidden"
       >
-        <button
-          className="mobile-menu-backdrop"
-          type="button"
-          tabIndex={-1}
-          aria-label="Close navigation menu"
-          onClick={closeMenuAndRestoreFocus}
-        />
-
-        <aside
-          ref={mobileMenuRef}
-          id="mobile-navigation"
-          className="mobile-navigation"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Mobile navigation"
-        >
-          <div className="mobile-drawer-header">
-            <div className="mobile-drawer-brand">
-              <span className="brand-mark" aria-hidden="true">
-                MA
-              </span>
-              <span>Muhammad Ahmad</span>
-            </div>
-            <button
-              className="mobile-drawer-close"
-              type="button"
-              aria-label="Close navigation menu"
-              onClick={closeMenuAndRestoreFocus}
-            >
-              <span>Close</span>
-              <span className="menu-icon menu-icon--open" aria-hidden="true">
-                <span />
-                <span />
-              </span>
-            </button>
-          </div>
-
-          <nav className="mobile-drawer-nav" aria-label="Mobile menu links">
-            <ul role="list">
-              {navigation.map((item) => (
-                <li key={item.href}>
-                  <Link href={item.href} onClick={closeMenu}>
+        <Container className="flex h-full flex-col py-6">
+          <nav aria-label="Mobile">
+            <ul className="flex flex-col">
+              {navItems.map((item, i) => (
+                <li key={item.href} className="border-b border-border">
+                  <Link
+                    href={item.href}
+                    onClick={closeMenu}
+                    className="flex items-center justify-between py-4 text-lg font-medium text-foreground transition-colors hover:text-primary"
+                  >
                     {item.label}
+                    <span className="font-mono text-xs text-muted-foreground">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
                   </Link>
                 </li>
               ))}
             </ul>
           </nav>
-
-          <Link
-            className="mobile-nav-cta"
-            href="/#contact"
-            onClick={() => {
-              closeMenu();
-              trackEvent("email_click", { location: "navbar_mobile_cta" });
-            }}
-          >
-            Let&apos;s Talk
-            <span aria-hidden="true">↗</span>
-          </Link>
-
-          <a
-            className="mobile-nav-resume"
-            href="/resume.pdf"
-            download="Muhammad_Ahmad_Resume.pdf"
-            onClick={() => {
-              closeMenu();
-              trackEvent("resume_download", {
-                mode: "download",
-                location: "navbar_mobile",
-              });
-            }}
-            aria-label="Download Muhammad Ahmad's Resume (PDF)"
-          >
-            <span>Download Resume</span>
-            <span aria-hidden="true">↓</span>
-          </a>
-        </aside>
+          
+          <div className="mt-auto pt-8 flex flex-col gap-3">
+            <Link
+              href="/#contact"
+              onClick={() => {
+                closeMenu();
+                trackEvent("email_click", { location: "navbar_mobile_cta" });
+              }}
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-primary text-sm font-medium text-primary-foreground"
+            >
+              Let&apos;s Talk
+              <ArrowUpRight className="size-4" aria-hidden="true" />
+            </Link>
+            
+            <a
+              href="/resume.pdf"
+              download="Muhammad_Ahmad_Resume.pdf"
+              onClick={() => {
+                closeMenu();
+                trackEvent("resume_download", {
+                  mode: "download",
+                  location: "navbar_mobile",
+                });
+              }}
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-border bg-card text-sm font-medium text-foreground"
+              aria-label="Download Muhammad Ahmad's Resume (PDF)"
+            >
+              Download Resume
+              <Download className="size-4" aria-hidden="true" />
+            </a>
+          </div>
+        </Container>
       </div>
-    </>
+    </header>
   );
 }

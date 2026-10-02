@@ -1,31 +1,30 @@
 import { proofMetrics } from "@/data/metrics";
+import { Container } from './portfolio/primitives'
 
 export default function ProofMetrics() {
   return (
-    <section
-      className="proof-metrics-section"
-      aria-labelledby="proof-metrics-title"
-    >
-      <div className="site-container">
-        <h2 id="proof-metrics-title" className="sr-only">
-          Key Impact &amp; Engineering Metrics
-        </h2>
-        <ol className="proof-metrics-grid" role="list">
-          {proofMetrics.map((metric, index) => (
-            <li className="proof-metric-card" key={metric.id}>
-              <div className="proof-metric-card__header">
-                <span className="proof-metric-card__index" aria-hidden="true">
-                  0{index + 1}
-                </span>
-                <span className="proof-metric-card__indicator" aria-hidden="true" />
-              </div>
-              <p className="proof-metric-card__value">{metric.value}</p>
-              <h3 className="proof-metric-card__label">{metric.label}</h3>
-              <p className="proof-metric-card__detail">{metric.detail}</p>
-            </li>
+    <section aria-label="Proof of work" className="border-y border-border bg-card">
+      <Container>
+        <dl className="grid grid-cols-2 lg:grid-cols-4">
+          {proofMetrics.map((item, i) => (
+            <div
+              key={item.id}
+              className={[
+                'flex flex-col gap-1 py-6 sm:py-8',
+                i % 2 === 1 ? 'pl-5 sm:pl-8' : 'pr-5 sm:pr-8',
+                i % 2 === 1 ? 'border-l border-border' : '',
+                i >= 2 ? 'border-t border-border lg:border-t-0' : '',
+                'lg:px-8 lg:first:pl-0',
+                i === 2 ? 'lg:border-l' : '',
+              ].join(' ')}
+            >
+              <dt className="order-2 text-sm font-medium text-foreground">{item.label}</dt>
+              <dd className="order-1 text-2xl font-semibold tracking-tight text-primary sm:text-3xl">{item.value}</dd>
+              <dd className="order-3 font-mono text-[11px] text-muted-foreground mt-2 leading-relaxed">{item.detail}</dd>
+            </div>
           ))}
-        </ol>
-      </div>
+        </dl>
+      </Container>
     </section>
-  );
+  )
 }

@@ -1,226 +1,218 @@
-"use client";
+import Link from 'next/link'
+import { ArrowRight, Monitor, Smartphone } from 'lucide-react'
+import { featuredProjects, type ProjectItem, getProjectGallery } from '@/data/projects'
+import { cn } from '@/lib/utils'
+import { Container, SectionHeading, Tag } from './portfolio/primitives'
+import { Reveal } from './portfolio/reveal'
+import { DesktopFrame, PhoneFrame } from './portfolio/screenshot-frames'
 
-import Link from "next/link";
-import Image from "next/image";
-import {
-  featuredProjects,
-  getProjectPresentation,
-  type ProjectItem,
-} from "@/data/projects";
-import { trackEvent } from "@/lib/analytics";
-
-function ProjectVisual({ project, index }: { project: ProjectItem; index: number }) {
-  const presentation = getProjectPresentation(project);
-  const isMobile = presentation.isMobile;
-
+export function ProjectIcon({ name, className }: { name: string; className?: string }) {
+  const letters = name
+    .split(/[\s-]+/)
+    .map((w) => w[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase()
   return (
-    <div
-      className={`project-case-study__visual project-visual--${project.visual} ${
-        project.image ? "project-case-study__visual--has-image" : ""
-      } ${isMobile ? "project-visual--mobile" : "project-visual--desktop"}`}
-      style={
-        {
-          "--screenshot-ratio": `${presentation.aspectRatio}`,
-          "--visual-max-width": presentation.maxWidth,
-        } as React.CSSProperties
-      }
+    <span
+      aria-hidden="true"
+      className={cn(
+        'flex size-11 shrink-0 items-center justify-center rounded-xl border border-border bg-card text-sm font-semibold text-primary shadow-xs',
+        className,
+      )}
     >
-      <div className="project-visual__topbar">
-        <span className="project-visual__indicator" />
-        <span>{project.visualLabel}</span>
-        <span className="project-visual__mode">0{index + 1}</span>
+      {letters}
+    </span>
+  )
+}
+
+function ProjectMeta({ project }: { project: ProjectItem }) {
+  const PlatformIcon = project.platform === 'desktop' ? Monitor : Smartphone
+  const caseStudyRows = [
+    { label: 'Challenge', value: project.caseStudy?.challenge },
+    { label: 'Approach', value: project.caseStudy?.architecture[0] },
+    { label: 'Result', value: project.caseStudy?.outcomes[0] },
+  ]
+  
+  return (
+    <div className="flex h-full flex-col">
+      <div className="flex items-start gap-4">
+        <ProjectIcon name={project.title} />
+        <div className="min-w-0">
+          <h3 className="text-xl font-semibold tracking-tight text-foreground">{project.title}</h3>
+          <p className="mt-0.5 flex items-center gap-1.5 text-sm text-muted-foreground">
+            <PlatformIcon className="size-3.5" aria-hidden="true" />
+            {project.category}
+          </p>
+        </div>
       </div>
 
-      {project.image ? (
-        <div className="project-visual__media">
-          <Image
-            src={project.image}
-            alt={project.imageAlt || `${project.title} interface view`}
-            fill
-            sizes={
-              isMobile
-                ? "(max-width: 768px) 85vw, 320px"
-                : "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 45vw"
-            }
-            className="project-visual__img"
-            priority={index === 0}
-          />
-          <div className="project-visual__overlay" aria-hidden="true" />
-        </div>
-      ) : (
-        <div className="project-visual__canvas" aria-hidden="true">
-          <div className="project-visual__primary">
-            <span className="project-visual__primary-line" />
-            <span className="project-visual__primary-line" />
-            <span className="project-visual__primary-line" />
+      <p className="mt-5 text-pretty leading-relaxed text-muted-foreground">{project.summary}</p>
+
+      <p className="mt-4 text-xs text-muted-foreground">
+        <span className="uppercase tracking-wider">Role</span>
+        <span className="mx-2 text-border" aria-hidden="true">
+          /
+        </span>
+        <span className="font-medium text-foreground">{project.ownership.slice(0, 50)}...</span>
+      </p>
+
+      <dl className="mt-5 divide-y divide-primary/10 rounded-xl border border-primary/15 bg-accent/50 text-sm">
+        {caseStudyRows.map((row) => (
+          <div key={row.label} className="grid gap-1 px-4 py-3 sm:grid-cols-[96px_1fr] sm:gap-3">
+            <dt className="text-[11px] font-medium uppercase tracking-wider text-primary sm:pt-0.5">{row.label}</dt>
+            <dd className="text-pretty leading-relaxed text-foreground">{row.value}</dd>
           </div>
-          <div className="project-visual__secondary">
-            <span />
-            <span />
-            <span />
-          </div>
-          <div className="project-visual__signal">
-            {Array.from({ length: 9 }, (_, idx) => (
-              <span key={idx} />
-            ))}
-          </div>
+        ))}
+      </dl>
+
+      <ul className="mt-5 flex flex-wrap gap-1.5" aria-label="Technologies">
+        {project.technologies.slice(0, 5).map((t) => (
+          <li key={t}>
+            <Tag>{t}</Tag>
+          </li>
+        ))}
+      </ul>
+
+      {project.caseStudyPath && (
+        <div className="mt-auto pt-6">
+          <Link
+            href={project.caseStudyPath}
+            className="group/cta inline-flex items-center gap-2 text-sm font-medium text-primary"
+          >
+            Read Case Study
+            <ArrowRight className="size-4 transition-transform group-hover/cta:translate-x-1" aria-hidden="true" />
+            <span className="sr-only">: {project.title}</span>
+          </Link>
         </div>
       )}
     </div>
-  );
+  )
+}
+
+function PhoneGallery({ project, count }: { project: ProjectItem; count: number }) {
+  const screenshots = getProjectGallery(project)
+  return (
+    <div className="relative h-full overflow-hidden rounded-2xl border border-border bg-surface">
+      <div aria-hidden="true" className="bg-grid absolute inset-0 opacity-50 [mask-image:linear-gradient(to_bottom,black,transparent)]" />
+      <ul
+        className="relative flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 py-8 [scrollbar-width:none] sm:justify-center sm:overflow-visible sm:px-6 sm:py-10 [&::-webkit-scrollbar]:hidden"
+        aria-label={`${project.title} screenshots`}
+      >
+        {Array.from({ length: count }).map((_, i) => (
+          <li
+            key={i}
+            className={cn(
+              'w-[58%] shrink-0 snap-center transition-transform duration-500 sm:w-[30%] sm:max-w-[200px]',
+              count === 3 && i === 1 && 'sm:-translate-y-4 group-hover:sm:-translate-y-6',
+              count === 3 && i !== 1 && 'group-hover:sm:-translate-y-1',
+              count === 2 && 'sm:w-[42%] group-hover:sm:-translate-y-1.5',
+            )}
+          >
+            <PhoneFrame
+              src={screenshots[i]?.path}
+              alt={screenshots[i]?.alt || `${project.title} screen ${i + 1}`}
+              label={`Screen ${i + 1}`}
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+function FeaturedMobileWide({ project }: { project: ProjectItem }) {
+  return (
+    <article className="group grid gap-6 rounded-3xl border border-border bg-card p-4 transition-all duration-300 hover:border-primary/25 hover:shadow-[0_30px_60px_-40px_rgba(15,40,50,0.35)] sm:p-6 lg:grid-cols-[0.85fr_1.15fr] lg:gap-10 lg:p-8">
+      <div className="order-2 px-1 pb-2 lg:order-1 lg:px-0 lg:pb-0">
+        <ProjectMeta project={project} />
+      </div>
+      <div className="order-1 lg:order-2">
+        <PhoneGallery project={project} count={3} />
+      </div>
+    </article>
+  )
+}
+
+function FeaturedMobileCompact({ project }: { project: ProjectItem }) {
+  return (
+    <article className="group flex h-full flex-col gap-6 rounded-3xl border border-border bg-card p-4 transition-all duration-300 hover:border-primary/25 hover:shadow-[0_30px_60px_-40px_rgba(15,40,50,0.35)] sm:p-6">
+      <PhoneGallery project={project} count={2} />
+      <div className="flex-1 px-1 pb-2">
+        <ProjectMeta project={project} />
+      </div>
+    </article>
+  )
+}
+
+function FeaturedDesktop({ project }: { project: ProjectItem }) {
+  const screenshots = getProjectGallery(project)
+  return (
+    <article className="group grid gap-6 rounded-3xl border border-border bg-card p-4 transition-all duration-300 hover:border-primary/25 hover:shadow-[0_30px_60px_-40px_rgba(15,40,50,0.35)] sm:p-6 lg:grid-cols-[1.35fr_0.65fr] lg:gap-10 lg:p-8">
+      <div className="rounded-2xl border border-border bg-surface p-3 sm:p-6">
+        <DesktopFrame
+          src={screenshots[0]?.path}
+          alt={screenshots[0]?.alt || `${project.title} desktop application`}
+          title={project.title}
+          className="transition-transform duration-500 group-hover:-translate-y-1"
+        />
+      </div>
+      <div className="px-1 pb-2 lg:px-0 lg:pb-0">
+        <ProjectMeta project={project} />
+      </div>
+    </article>
+  )
 }
 
 export default function Projects() {
+  const [first, second, third, desktop] = featuredProjects
   return (
-    <section
-      id="projects"
-      className="section featured-projects-section"
-      aria-labelledby="projects-title"
-    >
-      <div className="site-container">
-        <header className="featured-projects-intro">
-          <p className="section-kicker">
-            <span>03</span>
-            Featured Projects
-          </p>
-          <h2 id="projects-title" className="section-title">
-            Flagship production applications across mobile, APIs, and product delivery.
-          </h2>
-          <p>
-            Key mobile products demonstrating scalable architecture, dual-store release
-            management, platform integrations, and hands-on backend execution.
-          </p>
-        </header>
+    <section id="projects" aria-labelledby="projects-title" className="border-t border-border bg-background py-12 sm:py-16">
+      <Container>
+        <SectionHeading
+          id="projects-title"
+          eyebrow="Featured Work"
+          title="Selected Work"
+          description="A selection of production applications and engineering work."
+          action={
+            <p className="flex items-center gap-4 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <Smartphone className="size-3.5" aria-hidden="true" /> 3 Mobile
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Monitor className="size-3.5" aria-hidden="true" /> 1 Desktop
+              </span>
+            </p>
+          }
+        />
 
-        <ol className="featured-projects-list">
-          {featuredProjects.map((project, index) => (
-            <li className="featured-project-item" key={project.id}>
-              <article className="project-case-study" aria-labelledby={`${project.id}-title`}>
-                <div className="project-case-study__content">
-                  <div className="project-case-study__header">
-                    {project.icon && (
-                      <div className="project-case-study__icon-wrapper">
-                        <Image
-                          src={project.icon}
-                          alt={`${project.title} app icon`}
-                          width={48}
-                          height={48}
-                          className="project-case-study__icon"
-                        />
-                      </div>
-                    )}
-                    <div className="project-case-study__header-text">
-                      <div className="project-case-study__meta">
-                        <span className="project-case-study__number">0{index + 1}</span>
-                        <span className="project-case-study__category">{project.category}</span>
-                      </div>
-                      <h3 id={`${project.id}-title`}>{project.title}</h3>
-                    </div>
-                  </div>
-
-                  <p className="project-case-study__summary">{project.summary}</p>
-
-                  <div className="project-case-study__ownership">
-                    <span>Ownership</span>
-                    <p>{project.ownership}</p>
-                  </div>
-
-                  <ul className="project-case-study__highlights">
-                    {project.highlights.map((highlight) => (
-                      <li key={highlight}>{highlight}</li>
-                    ))}
-                  </ul>
-
-                  {project.caseStudy?.architecture && project.caseStudy.architecture.length > 0 && (
-                    <div className="project-case-study__architecture-core">
-                      <span className="project-case-study__architecture-label">
-                        Architecture Core:
-                      </span>
-                      <p>{project.caseStudy.architecture[0]}</p>
-                    </div>
-                  )}
-
-                  <div className="project-case-study__footer">
-                    <ul
-                      className="project-case-study__stack"
-                      role="list"
-                      aria-label={`${project.title} technologies`}
-                    >
-                      {project.technologies.map((technology) => (
-                        <li key={technology}>{technology}</li>
-                      ))}
-                    </ul>
-
-                    <div className="project-case-study__actions">
-                      <div className="project-case-study__links-group">
-                        {project.caseStudyPath && (
-                          <Link
-                            href={project.caseStudyPath}
-                            className="project-case-study__case-study-link"
-                            onClick={() =>
-                              trackEvent("case_study_open", {
-                                project_id: project.id,
-                                source: "featured_card",
-                              })
-                            }
-                          >
-                            <span>Read Full Case Study</span>
-                            <span aria-hidden="true">→</span>
-                          </Link>
-                        )}
-
-                        {project.links?.playStore && (
-                          <a
-                            href={project.links.playStore}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="project-case-study__live-link"
-                            aria-label={`${project.title} on Google Play`}
-                            onClick={() =>
-                              trackEvent("google_play_click", {
-                                project_id: project.id,
-                              })
-                            }
-                          >
-                            <span>Google Play</span>
-                            <span aria-hidden="true">↗</span>
-                          </a>
-                        )}
-
-                        {project.links?.demo && (
-                          <a
-                            href={project.links.demo}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="project-case-study__live-link"
-                            aria-label={`${project.title} live platform`}
-                            onClick={() =>
-                              trackEvent("project_open", {
-                                project_id: project.id,
-                                source: "featured_live_platform",
-                              })
-                            }
-                          >
-                            <span>Live Platform</span>
-                            <span aria-hidden="true">↗</span>
-                          </a>
-                        )}
-                      </div>
-
-                      <p className="project-case-study__status">
-                        <span aria-hidden="true" />
-                        {project.links?.label || project.status}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <ProjectVisual project={project} index={index} />
-              </article>
-            </li>
-          ))}
-        </ol>
-      </div>
+        <div className="mt-8 flex flex-col gap-6 lg:gap-8">
+          {first && (
+            <Reveal>
+              <FeaturedMobileWide project={first} />
+            </Reveal>
+          )}
+          
+          <div className="grid gap-6 md:grid-cols-2 lg:gap-8">
+            {second && (
+              <Reveal className="h-full">
+                <FeaturedMobileCompact project={second} />
+              </Reveal>
+            )}
+            {third && (
+              <Reveal delay={100} className="h-full">
+                <FeaturedMobileCompact project={third} />
+              </Reveal>
+            )}
+          </div>
+          
+          {desktop && (
+            <Reveal>
+              <FeaturedDesktop project={desktop} />
+            </Reveal>
+          )}
+        </div>
+      </Container>
     </section>
-  );
+  )
 }

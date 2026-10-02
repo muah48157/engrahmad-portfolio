@@ -46,7 +46,7 @@ export default function ThemeToggle() {
 
   return (
     <button
-      className="theme-toggle"
+      className="flex size-9 items-center justify-center rounded-full border border-border bg-card text-foreground transition-colors hover:bg-accent"
       type="button"
       aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
       aria-pressed={theme === "dark"}
@@ -55,17 +55,13 @@ export default function ThemeToggle() {
     >
       {theme === "light" ? (
         <Moon
-          className="theme-toggle__icon"
+          className="size-4"
           aria-hidden="true"
-          size={18}
-          strokeWidth={1.75}
         />
       ) : (
         <Sun
-          className="theme-toggle__icon"
+          className="size-4"
           aria-hidden="true"
-          size={18}
-          strokeWidth={1.75}
         />
       )}
     </button>

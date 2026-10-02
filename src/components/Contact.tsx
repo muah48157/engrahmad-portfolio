@@ -1,98 +1,85 @@
-"use client";
+import { ArrowUpRight, Download, FileText, Mail } from 'lucide-react'
+import { GithubIcon, LinkedinIcon } from './portfolio/brand-icons'
+import { Container, Eyebrow, LinkButton } from './portfolio/primitives'
+import { Reveal } from './portfolio/reveal'
 
-import { contact } from "@/data/contact";
-import { trackEvent } from "@/lib/analytics";
+const profile = {
+  name: 'Muhammad Ahmad',
+  title: 'Flutter Developer / Mobile Software Engineer',
+  email: 'muah48157@gmail.com',
+  linkedin: 'https://www.linkedin.com/in/muhammad-ahmad5556/',
+  linkedinLabel: 'muhammad-ahmad5556',
+  github: 'https://github.com/muah48157',
+  githubLabel: 'muah48157',
+  resume: '/resume.pdf',
+}
+
+const channels = [
+  { icon: Mail, label: 'Email', value: profile.email, href: `mailto:${profile.email}` },
+  { icon: LinkedinIcon, label: 'LinkedIn', value: profile.linkedinLabel, href: profile.linkedin },
+  { icon: GithubIcon, label: 'GitHub', value: profile.githubLabel, href: profile.github },
+  { icon: FileText, label: 'Resume', value: 'Download PDF', href: profile.resume },
+]
 
 export default function Contact() {
-  const handleSocialClick = (label: string) => {
-    if (label.toLowerCase().includes("linkedin")) {
-      trackEvent("linkedin_click", { location: "contact" });
-    } else if (label.toLowerCase().includes("github")) {
-      trackEvent("github_click", { location: "contact" });
-    }
-  };
-
   return (
-    <section id="contact" className="section contact-section" aria-labelledby="contact-title">
-      <div className="site-container contact-layout">
-        <div className="contact-copy">
-          <p className="section-kicker">
-            <span>08</span>
-            Contact
-          </p>
-          <h2 id="contact-title" className="contact-title">
-            Let&apos;s build something reliable.
-          </h2>
-          <p>
-            I am open to Flutter Developer, Mobile Software Engineer, and cross-platform
-            product engineering roles—including remote opportunities worldwide and selected
-            technical collaborations.
-          </p>
-          <p>
-            If you are hiring for a mobile engineering role or need architecture, payment,
-            map, or store deployment expertise for a production Flutter application, feel free
-            to reach out.
-          </p>
-        </div>
+    <section id="contact" aria-labelledby="contact-title" className="py-12 sm:py-16">
+      <Container>
+        <Reveal>
+          <div className="relative overflow-hidden rounded-3xl border border-border bg-card p-6 sm:p-10 lg:p-14">
+            <div
+              aria-hidden="true"
+              className="bg-grid pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_60%_80%_at_100%_0%,black,transparent)]"
+            />
+            <div className="relative grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-16">
+              <div className="flex flex-col">
+                <Eyebrow>Get In Touch</Eyebrow>
+                <h2 id="contact-title" className="mt-4 text-balance text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
+                  {"Let's Work Together"}
+                </h2>
+                <p className="mt-4 max-w-md text-pretty leading-relaxed text-muted-foreground">
+                  Open to remote opportunities worldwide.
+                </p>
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row lg:mt-auto lg:pt-10">
+                  <LinkButton href={`mailto:${profile.email}`}>
+                    Get In Touch
+                    <ArrowUpRight aria-hidden="true" />
+                  </LinkButton>
+                  <LinkButton href={profile.resume} variant="outline" download="Muhammad_Ahmad_Resume.pdf">
+                    Download Resume
+                    <Download aria-hidden="true" />
+                  </LinkButton>
+                </div>
+              </div>
 
-        <div className="contact-actions">
-          <p className="contact-availability">
-            <span aria-hidden="true" />
-            Open to remote opportunities worldwide
-          </p>
-
-          <a
-            className="contact-email"
-            href={contact.email.href}
-            onClick={() => trackEvent("email_click", { location: "contact" })}
-          >
-            <span>Email Me</span>
-            <span aria-hidden="true">↗</span>
-          </a>
-
-          <div className="contact-resume-group">
-            <a
-              className="contact-resume"
-              href={contact.resume}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() =>
-                trackEvent("resume_download", { mode: "view", location: "contact" })
-              }
-            >
-              <span>View Resume</span>
-              <span aria-hidden="true">↗</span>
-            </a>
-            <a
-              className="contact-resume contact-resume--download"
-              href={contact.resume}
-              download="Muhammad_Ahmad_Resume.pdf"
-              aria-label="Download Muhammad Ahmad's Resume (PDF)"
-              onClick={() =>
-                trackEvent("resume_download", { mode: "download", location: "contact" })
-              }
-            >
-              <span>Download PDF</span>
-              <span aria-hidden="true">↓</span>
-            </a>
+              <ul className="divide-y divide-border rounded-2xl border border-border bg-background/60">
+                {channels.map((c) => (
+                  <li key={c.label}>
+                    <a
+                      href={c.href}
+                      target={c.href.startsWith('http') ? '_blank' : undefined}
+                      rel={c.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                      className="group flex items-center gap-4 p-4 transition-colors hover:bg-accent/50 sm:p-5"
+                    >
+                      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-border bg-card text-primary">
+                        <c.icon className="size-4" />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-xs text-muted-foreground">{c.label}</span>
+                        <span className="block truncate text-sm font-medium text-foreground">{c.value}</span>
+                      </span>
+                      <ArrowUpRight
+                        className="size-4 shrink-0 text-muted-foreground transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary"
+                        aria-hidden="true"
+                      />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-
-          <nav className="contact-social" aria-label="Professional profiles">
-            {contact.social.map((link) => (
-              <a
-                href={link.href}
-                key={link.label}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => handleSocialClick(link.label)}
-              >
-                {link.label}
-                <span aria-hidden="true">↗</span>
-              </a>
-            ))}
-          </nav>
-        </div>
-      </div>
+        </Reveal>
+      </Container>
     </section>
-  );
+  )
 }

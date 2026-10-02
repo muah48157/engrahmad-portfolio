@@ -1,89 +1,53 @@
-import Image from "next/image";
 import { additionalProjects } from "@/data/projects";
+import { Container, Eyebrow, Tag } from './portfolio/primitives'
+import { ProjectIcon } from './Projects'
 
 export default function AdditionalProjects() {
   return (
-    <section
-      id="additional-projects"
-      className="section additional-projects-section"
-      aria-labelledby="additional-projects-title"
-    >
-      <div className="site-container">
-        <header className="additional-projects-intro">
-          <p className="section-kicker">
-            <span>06</span>
-            Additional Projects
-          </p>
-          <h2 id="additional-projects-title" className="section-title">
-            Supporting mobile applications and workflow utilities.
-          </h2>
-          <p>
-            Focused products built and released for small-business billing, document workflows,
-            media commerce, and payment integrations.
-          </p>
-        </header>
+    <section aria-labelledby="more-title" className="py-10 sm:py-12">
+      <Container>
+        <div className="flex flex-col gap-8 lg:flex-row lg:gap-16">
+          <div className="lg:w-64 lg:shrink-0">
+            <Eyebrow>More Projects</Eyebrow>
+            <h2 id="more-title" className="mt-3 text-xl font-semibold tracking-tight text-foreground">
+              Additional work
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground">Smaller builds and utilities.</p>
+          </div>
+          <ul className="grid flex-1 gap-4 sm:grid-cols-2">
+            {additionalProjects.map((p) => (
+              <li
+                key={p.title}
+                className="flex gap-4 rounded-2xl border border-border bg-card p-5 transition-colors hover:border-primary/25 flex-col lg:flex-row"
+              >
+                <ProjectIcon name={p.title} className="size-10 text-xs" />
+                <div className="min-w-0 flex flex-col h-full">
+                  <h3 className="font-semibold text-foreground">{p.title}</h3>
+                  <p className="mt-1 text-pretty text-sm leading-relaxed text-muted-foreground">{p.summary}</p>
+                  
+                  <div className="mt-4 flex flex-col gap-2">
+                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-mono">Highlights</span>
+                    <ul className="space-y-1.5">
+                      {p.highlights.map(h => (
+                        <li key={h} className="text-xs text-muted-foreground flex gap-1.5 leading-relaxed">
+                          <span className="text-border mt-0.5 shrink-0">•</span>
+                          <span>{h}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
 
-        <ol className="additional-projects-grid" role="list">
-          {additionalProjects.map((project, index) => (
-            <li className="additional-project-card" key={project.id}>
-              <article aria-labelledby={`add-proj-${project.id}`}>
-                <div className="additional-project-card__header">
-                  {project.icon ? (
-                    <div className="additional-project-card__icon-wrapper">
-                      <Image
-                        src={project.icon}
-                        alt={`${project.title} app icon`}
-                        width={40}
-                        height={40}
-                        className="additional-project-card__icon"
-                      />
-                    </div>
-                  ) : (
-                    <span className="additional-project-card__number" aria-hidden="true">
-                      0{index + 1}
-                    </span>
-                  )}
-                  <p className="additional-project-card__category">{project.category}</p>
-                </div>
-
-                <h3 id={`add-proj-${project.id}`} className="additional-project-card__title">
-                  {project.title}
-                </h3>
-
-                <p className="additional-project-card__summary">{project.summary}</p>
-
-                <div className="additional-project-card__ownership">
-                  <span>Ownership:</span>
-                  <p>{project.ownership}</p>
-                </div>
-
-                <ul className="additional-project-card__highlights">
-                  {project.highlights.map((highlight) => (
-                    <li key={highlight}>{highlight}</li>
-                  ))}
-                </ul>
-
-                <div className="additional-project-card__footer">
-                  <ul
-                    className="additional-project-card__stack"
-                    role="list"
-                    aria-label={`${project.title} technologies`}
-                  >
-                    {project.technologies.map((tech) => (
-                      <li key={tech}>{tech}</li>
+                  <div className="mt-auto pt-4 flex flex-wrap gap-1.5">
+                    {p.technologies.slice(0, 4).map((t) => (
+                      <Tag key={t}>{t}</Tag>
                     ))}
-                  </ul>
-
-                  <p className="additional-project-card__status">
-                    <span aria-hidden="true" />
-                    {project.links?.label || project.status}
-                  </p>
+                  </div>
                 </div>
-              </article>
-            </li>
-          ))}
-        </ol>
-      </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Container>
     </section>
-  );
+  )
 }

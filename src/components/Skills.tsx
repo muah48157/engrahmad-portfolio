@@ -1,60 +1,85 @@
-import { skillGroups } from "@/data/skills";
+import { CreditCard, Database, Layers, Rocket, Server, Smartphone } from 'lucide-react'
+import { skillGroups } from '@/data/skills'
+import { cn } from '@/lib/utils'
+import { Container, SectionHeading } from './portfolio/primitives'
+import { Reveal } from './portfolio/reveal'
 
-const capabilities = [
-  "Mobile architecture",
-  "API integration",
-  "Payments",
-  "Real-time location",
-  "Production deployment",
-  "Backend collaboration",
-];
+const icons: Record<string, React.ElementType> = {
+  'mobile-engineering': Smartphone,
+  'architecture-state': Layers,
+  'backend-apis': Server,
+  'cloud-data': Database,
+  'payments-maps-media': CreditCard,
+  'delivery-tooling': Rocket,
+}
 
 export default function Skills() {
   return (
-    <section id="skills" className="section skills-section" aria-labelledby="skills-title">
-      <div className="site-container">
-        <header className="skills-intro">
-          <p className="section-kicker">
-            <span>05</span>
-            Skills
-          </p>
-          <h2 id="skills-title" className="section-title">
-            Engineering capabilities across mobile, APIs, and product delivery.
-          </h2>
-          <p>
-            Technologies and practical engineering approaches used across production mobile
-            applications and the backend systems that support them.
-          </p>
-        </header>
+    <section id="skills" aria-labelledby="skills-title" className="border-t border-border py-12 sm:py-16">
+      <Container>
+        <SectionHeading
+          id="skills-title"
+          eyebrow="Engineering Capabilities"
+          title="The full stack behind a mobile product"
+          description="Grouped by what they enable — from the widget tree to the release pipeline."
+        />
 
-        <ul className="skills-capability-strip" role="list" aria-label="Core capabilities">
-          {capabilities.map((capability) => (
-            <li key={capability}>{capability}</li>
-          ))}
-        </ul>
-
-        <ol className="skills-grid">
-          {skillGroups.map((group, index) => (
-            <li className="skills-group" key={group.id}>
-              <article aria-labelledby={`${group.id}-title`}>
-                <div className="skills-group__heading">
-                  <span aria-hidden="true">0{index + 1}</span>
-                  <h3 id={`${group.id}-title`}>{group.title}</h3>
+        <div className="mt-8 grid gap-px overflow-hidden rounded-3xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
+          {skillGroups.map((group, i) => {
+            const Icon = icons[group.id] || Smartphone
+            const isLead = i === 0
+            return (
+              <Reveal
+                key={group.id}
+                delay={(i % 4) * 60}
+                className={cn('h-full bg-card', isLead && 'sm:col-span-2 lg:col-span-1')}
+              >
+                <div
+                  className={cn(
+                    'group flex h-full flex-col p-6 transition-colors duration-300 hover:bg-surface sm:p-7',
+                    isLead && 'bg-ink text-ink-foreground hover:bg-ink',
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <span
+                      className={cn(
+                        'flex size-10 items-center justify-center rounded-xl bg-accent text-primary transition-transform duration-300 group-hover:-translate-y-0.5',
+                        isLead && 'bg-white/10 text-ink-foreground',
+                      )}
+                    >
+                      <Icon className="size-[18px]" aria-hidden="true" />
+                    </span>
+                    <span className={cn('font-mono text-[11px] text-muted-foreground', isLead && 'text-ink-foreground/60')}>
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                  </div>
+                  <h3 className={cn('mt-6 text-base font-semibold text-foreground', isLead && 'text-ink-foreground')}>
+                    {group.title}
+                  </h3>
+                  <p className={cn('mt-2 text-xs leading-relaxed text-muted-foreground', isLead && 'text-ink-foreground/70')}>
+                    {group.description}
+                  </p>
+                  <ul className="mt-4 flex flex-col gap-1.5">
+                    {group.skills.map((s) => (
+                      <li
+                        key={s.name}
+                        className={cn('text-sm text-muted-foreground', isLead && 'text-ink-foreground/80')}
+                      >
+                        {s.name}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <p>{group.description}</p>
-
-                <ul className="skills-tags" role="list" aria-label={`${group.title} skills`}>
-                  {group.skills.map((skill) => (
-                    <li className={skill.featured ? "skills-tag--featured" : undefined} key={skill.name}>
-                      {skill.name}
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            </li>
-          ))}
-        </ol>
-      </div>
+              </Reveal>
+            )
+          })}
+          <div className="hidden bg-card p-7 lg:flex lg:flex-col lg:justify-end">
+            <p className="text-pretty text-sm leading-relaxed text-muted-foreground">
+              Chosen for production — every item here has shipped in a real app.
+            </p>
+          </div>
+        </div>
+      </Container>
     </section>
-  );
+  )
 }

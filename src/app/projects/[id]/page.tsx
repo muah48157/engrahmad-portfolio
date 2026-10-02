@@ -1,25 +1,22 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import Image from "next/image";
-import { notFound } from "next/navigation";
-import { isMobileProject, projects } from "@/data/projects";
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { featuredProjects, isMobileProject, getProjectGallery } from '@/data/projects'
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Container, Eyebrow, Tag } from '@/components/portfolio/primitives'
+import { ProjectIcon } from '@/components/Projects'
+import { DesktopFrame, PhoneFrame } from '@/components/portfolio/screenshot-frames'
 
-type Props = {
-  params: Promise<{ id: string }>;
-};
-
-export async function generateStaticParams() {
-  return projects
-    .filter((project) => project.isFeatured && project.caseStudy)
-    .map((project) => ({ id: project.id }));
+export function generateStaticParams() {
+  return featuredProjects.map((p) => ({ id: p.id }))
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { id } = await params;
-  const project = projects.find((p) => p.id === id);
-
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params
+  const project = featuredProjects.find((p) => p.id === id)
+  
   if (!project) {
     return {
       title: "Project Not Found | Muhammad Ahmad",
@@ -29,7 +26,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const siteUrl = "https://engrahmad.com";
   const pageTitle = `${project.title} — Case Study | Muhammad Ahmad`;
   const pageDescription = `${project.title}: ${project.summary}`;
-
   const ogImage = project.image ? `${siteUrl}${project.image}` : `${siteUrl}/og-image.jpg`;
 
   return {
@@ -62,18 +58,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function CaseStudyPage({ params }: Props) {
-  const { id } = await params;
-  const project = projects.find((p) => p.id === id);
+const sections = [
+  { key: 'challenge', label: 'The Challenge' },
+  { key: 'architecture', label: 'Architecture & State Patterns' },
+  { key: 'backendBoundary', label: 'Backend, APIs & Platform Boundary' },
+  { key: 'performance', label: 'Performance & Data Optimizations' },
+  { key: 'outcomes', label: 'Verified Outcomes & Production Delivery' },
+] as const
 
-  if (!project || !project.caseStudy) {
-    notFound();
-  }
+export default async function CaseStudyPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const index = featuredProjects.findIndex((p) => p.id === id)
+  if (index === -1) notFound()
+  const project = featuredProjects[index]
+  const next = featuredProjects[(index + 1) % featuredProjects.length]
 
-  const { caseStudy } = project;
-  const isDesktop = !isMobileProject(project);
-  const allScreenshots = project.galleryScreenshots || [];
-  const galleryScreenshots = allScreenshots.filter((shot) => shot.path !== project.image);
+  if (!project.caseStudy) notFound()
+
+  const screenshots = getProjectGallery(project)
+  const isDesktop = !isMobileProject(project)
 
   const appCategory =
     project.category.includes("Medical") || project.category.includes("Clinical")
@@ -108,257 +111,118 @@ export default async function CaseStudyPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
       />
       <Navbar />
-      <main id="main-content" className="case-study-page">
-        <article className="site-container case-study-article">
-          {/* Breadcrumb / Back Link */}
-          <nav className="case-study-nav" aria-label="Case study breadcrumb">
-            <Link href="/#projects" className="case-study-back-link">
-              <span aria-hidden="true">←</span>
-              <span>Back to Featured Projects</span>
-            </Link>
-          </nav>
+      <main className="pb-20 sm:pb-28">
+        <Container className="pt-10 sm:pt-14">
+          <Link href="/#projects" className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary">
+            <ArrowLeft className="size-4" aria-hidden="true" />
+            All projects
+          </Link>
 
-          {/* Header */}
-          <header className="case-study-header">
-            <div className="case-study-header__identity">
-              {project.icon && (
-                <div className="case-study-header__icon-wrapper">
-                  <Image
-                    src={project.icon}
-                    alt={`${project.title} app icon`}
-                    width={56}
-                    height={56}
-                    className="case-study-header__icon"
-                  />
-                </div>
-              )}
-              <div>
-                <p className="case-study-header__category">{project.category}</p>
-                <h1 className="case-study-header__title">{project.title}</h1>
-              </div>
+          <div className="mt-8 flex flex-col md:flex-row md:items-start gap-4">
+            <ProjectIcon name={project.title} className="size-14 text-base hidden md:flex" />
+            <div>
+              <Eyebrow>Case Study · {project.category}</Eyebrow>
+              <h1 className="mt-3 text-balance text-4xl font-semibold tracking-tight sm:text-5xl">{project.title}</h1>
             </div>
+          </div>
+          <p className="mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-muted-foreground">{project.summary}</p>
 
-            <p className="case-study-header__summary">{project.summary}</p>
+          <dl className="mt-8 grid grid-cols-2 gap-4 border-y border-border py-6 sm:grid-cols-4">
+            <div className="col-span-2 md:col-span-1">
+              <dt className="text-xs uppercase tracking-wider text-muted-foreground">Ownership</dt>
+              <dd className="mt-1 text-sm font-medium pr-4">{project.ownership.slice(0, 70)}...</dd>
+            </div>
+            <div className="col-span-2 md:col-span-1">
+              <dt className="text-xs uppercase tracking-wider text-muted-foreground">Store Status</dt>
+              <dd className="mt-1 text-sm font-medium">{project.status}</dd>
+            </div>
+            <div className="col-span-2 md:col-span-2">
+              <dt className="text-xs uppercase tracking-wider text-muted-foreground">Stack</dt>
+              <dd className="mt-2 flex flex-wrap gap-1.5">
+                {project.technologies.slice(0, 6).map((t) => (
+                  <Tag key={t}>{t}</Tag>
+                ))}
+              </dd>
+            </div>
+          </dl>
 
-            <div className="case-study-header__badges">
-              <span className="case-study-status-badge">
-                <span className="status-dot" aria-hidden="true" />
-                {project.links?.label || project.status}
-              </span>
-              <ul
-                className="case-study-tech-pills"
-                role="list"
-                aria-label="Core technologies"
-              >
-                {project.technologies.map((tech) => (
-                  <li key={tech}>{tech}</li>
+          <div className="mt-10 rounded-3xl border border-border bg-surface p-4 sm:p-8">
+            {isDesktop ? (
+              <DesktopFrame src={screenshots[0]?.path} alt={`${project.title} desktop`} title={project.title} />
+            ) : (
+              <ul className="flex snap-x snap-mandatory gap-4 overflow-x-auto [scrollbar-width:none] sm:grid sm:grid-cols-4 sm:overflow-visible">
+                {Array.from({ length: Math.min(4, screenshots.length) }).map((_, i) => (
+                  <li key={i} className="w-[60%] shrink-0 snap-center sm:w-auto">
+                    <PhoneFrame src={screenshots[i]?.path} alt={`${project.title} screen ${i + 1}`} label={`Screen ${i + 1}`} />
+                  </li>
                 ))}
               </ul>
-            </div>
-          </header>
-
-          {/* Visual Showcase Media */}
-          {project.image && (
-            <figure
-              className={`case-study-showcase-media ${
-                isDesktop
-                  ? "case-study-showcase-media--desktop"
-                  : "case-study-showcase-media--mobile"
-              }`}
-            >
-              <div className="case-study-showcase-media__topbar">
-                <span className="project-visual__indicator" aria-hidden="true" />
-                <span>{project.visualLabel}</span>
-                <span className="project-visual__mode">Verified Production Architecture</span>
-              </div>
-              <div className="case-study-showcase-media__canvas">
-                <Image
-                  src={project.image}
-                  alt={project.imageAlt || `${project.title} production interface`}
-                  fill
-                  sizes="(max-width: 1200px) 100vw, 76rem"
-                  className="case-study-showcase-media__img"
-                  priority
-                />
-              </div>
-            </figure>
-          )}
-
-          {/* Quick Facts Strip */}
-          <section className="case-study-facts" aria-label="Project ownership and scope">
-            <div className="case-study-fact">
-              <span className="case-study-fact__label">Ownership</span>
-              <p className="case-study-fact__value">{project.ownership}</p>
-            </div>
-            <div className="case-study-fact">
-              <span className="case-study-fact__label">Domain</span>
-              <p className="case-study-fact__value">{project.category}</p>
-            </div>
-            <div className="case-study-fact">
-              <span className="case-study-fact__label">Store Status</span>
-              <p className="case-study-fact__value">{project.status}</p>
-            </div>
-          </section>
-
-          {/* Main Deep-Dive Content Sections */}
-          <div className="case-study-body">
-            {/* 1. Challenge */}
-            <section className="case-study-section" aria-labelledby="section-challenge">
-              <div className="case-study-section__header">
-                <span className="section-kicker">
-                  <span>01</span>
-                  Challenge
-                </span>
-                <h2 id="section-challenge" className="case-study-section__title">
-                  Product Constraints & Engineering Scope
-                </h2>
-              </div>
-              <p className="case-study-section__lead">{caseStudy.challenge}</p>
-            </section>
-
-            {/* 2. Architecture & State Management */}
-            <section className="case-study-section" aria-labelledby="section-architecture">
-              <div className="case-study-section__header">
-                <span className="section-kicker">
-                  <span>02</span>
-                  Architecture
-                </span>
-                <h2 id="section-architecture" className="case-study-section__title">
-                  Mobile Architecture & State Patterns
-                </h2>
-              </div>
-              <ul className="case-study-points-list" role="list">
-                {caseStudy.architecture.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
-            </section>
-
-            {/* 3. API & Backend Boundary */}
-            <section className="case-study-section" aria-labelledby="section-backend">
-              <div className="case-study-section__header">
-                <span className="section-kicker">
-                  <span>03</span>
-                  Integration
-                </span>
-                <h2 id="section-backend" className="case-study-section__title">
-                  Backend, APIs & Platform Boundary
-                </h2>
-              </div>
-              <ul className="case-study-points-list" role="list">
-                {caseStudy.backendBoundary.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
-            </section>
-
-            {/* 4. Performance & Engineering Solutions */}
-            <section className="case-study-section" aria-labelledby="section-performance">
-              <div className="case-study-section__header">
-                <span className="section-kicker">
-                  <span>04</span>
-                  Performance
-                </span>
-                <h2 id="section-performance" className="case-study-section__title">
-                  Performance & Data Optimizations
-                </h2>
-              </div>
-              <ul className="case-study-points-list" role="list">
-                {caseStudy.performance.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
-            </section>
-
-            {/* 5. Measurable Outcomes & Ownership */}
-            <section className="case-study-section" aria-labelledby="section-outcomes">
-              <div className="case-study-section__header">
-                <span className="section-kicker">
-                  <span>05</span>
-                  Outcomes
-                </span>
-                <h2 id="section-outcomes" className="case-study-section__title">
-                  Verified Outcomes & Production Delivery
-                </h2>
-              </div>
-              <ul className="case-study-points-list case-study-points-list--outcomes" role="list">
-                {caseStudy.outcomes.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
-            </section>
-
-            {/* 6. Production Interface Gallery */}
-            {galleryScreenshots.length > 0 && (
-              <section
-                className="case-study-section case-study-gallery-section"
-                aria-labelledby="section-gallery"
-              >
-                <div className="case-study-section__header">
-                  <span className="section-kicker">
-                    <span>06</span>
-                    Interface Gallery
-                  </span>
-                  <h2 id="section-gallery" className="case-study-section__title">
-                    Production Application Workflows
-                  </h2>
-                </div>
-                <p className="case-study-section__lead">
-                  Authentic product screens and application workflows captured directly from the
-                  running production builds.
-                </p>
-
-                <div
-                  className={`case-study-gallery-grid ${
-                    isDesktop
-                      ? "case-study-gallery-grid--desktop"
-                      : "case-study-gallery-grid--mobile"
-                  }`}
-                >
-                  {galleryScreenshots.map((shot, idx) => (
-                    <figure key={shot.path} className="case-study-gallery-card">
-                      <div className="case-study-gallery-card__media">
-                        <Image
-                          src={shot.path}
-                          alt={shot.alt}
-                          width={shot.width}
-                          height={shot.height}
-                          sizes={
-                            isDesktop
-                              ? "(max-width: 768px) 100vw, 50vw"
-                              : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                          }
-                          className="case-study-gallery-card__img"
-                          loading="lazy"
-                        />
-                      </div>
-                      <figcaption className="case-study-gallery-card__caption">
-                        <span className="case-study-gallery-card__index" aria-hidden="true">
-                          0{idx + 1}
-                        </span>
-                        <span className="case-study-gallery-card__label">{shot.alt}</span>
-                      </figcaption>
-                    </figure>
-                  ))}
-                </div>
-              </section>
             )}
           </div>
 
-          {/* Footer Actions */}
-          <footer className="case-study-footer">
-            <Link href="/#projects" className="button button--secondary">
-              <span aria-hidden="true">←</span>
-              <span>All Projects</span>
-            </Link>
-            <Link href="/#contact" className="button button--primary">
-              <span>Discuss Mobile Engineering Opportunities</span>
-              <span aria-hidden="true">↗</span>
-            </Link>
-          </footer>
-        </article>
+          <div className="mt-14 grid gap-10 lg:grid-cols-[16rem_1fr]">
+            <nav aria-label="Case study sections" className="hidden lg:block">
+              <ol className="sticky top-24 space-y-2 text-sm">
+                {sections.map((s, i) => (
+                  <li key={s.key}>
+                    <a href={`#${s.key}`} className="flex gap-3 text-muted-foreground transition-colors hover:text-primary">
+                      <span className="font-mono text-xs">0{i + 1}</span>
+                      <span className="max-w-[200px] leading-tight">{s.label}</span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+            <div className="space-y-10">
+              {sections.map((s, i) => {
+                const content = project.caseStudy![s.key];
+                return (
+                  <section key={s.key} id={s.key} aria-labelledby={`${s.key}-h`} className="border-t border-border pt-6">
+                    <p className="font-mono text-xs text-primary">0{i + 1}</p>
+                    <h2 id={`${s.key}-h`} className="mt-2 text-2xl font-semibold tracking-tight">{s.label}</h2>
+                    
+                    {Array.isArray(content) ? (
+                      <ul className="mt-4 space-y-3 pl-4 list-disc text-muted-foreground marker:text-primary/50">
+                        {content.map((point) => (
+                          <li key={point} className="pl-1 text-pretty leading-relaxed">
+                            {point}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="mt-3 max-w-2xl text-pretty leading-relaxed text-muted-foreground">{content}</p>
+                    )}
+                  </section>
+                );
+              })}
+              
+              <section aria-labelledby="highlight-h" className="rounded-2xl border border-primary/15 bg-accent/60 p-6">
+                <h2 id="highlight-h" className="text-sm font-medium uppercase tracking-wider text-primary">Engineering highlight</h2>
+                <ul className="mt-3 space-y-2">
+                   {project.highlights.map((h) => (
+                      <li key={h} className="text-pretty text-base leading-relaxed text-foreground flex gap-3">
+                         <span className="text-primary mt-1 text-lg leading-none">•</span>
+                         <span>{h}</span>
+                      </li>
+                   ))}
+                </ul>
+              </section>
+            </div>
+          </div>
+
+          <Link
+            href={`/projects/${next.id}`}
+            className="group mt-16 flex items-center justify-between rounded-2xl border border-border bg-card p-6 transition-colors hover:border-primary/30"
+          >
+            <span>
+              <span className="block text-xs uppercase tracking-wider text-muted-foreground">Next project</span>
+              <span className="mt-1 block text-xl font-semibold">{next.title}</span>
+            </span>
+            <ArrowRight className="size-5 text-primary transition-transform group-hover:translate-x-1" aria-hidden="true" />
+          </Link>
+        </Container>
       </main>
       <Footer />
     </>
-  );
+  )
 }
