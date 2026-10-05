@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { ArrowRight, Monitor, Smartphone } from 'lucide-react'
-import { featuredProjects, type ProjectItem, getProjectGallery } from '@/data/projects'
+import { featuredProjects, additionalProjects, type ProjectItem, getProjectGallery } from '@/data/projects'
 import { cn } from '@/lib/utils'
 import { Container, SectionHeading, Tag } from './portfolio/primitives'
 import { Reveal } from './portfolio/reveal'
@@ -200,6 +200,49 @@ export default function Projects() {
           {desktop && (
             <Reveal>
               <FeaturedDesktop project={desktop} />
+            </Reveal>
+          )}
+
+          {additionalProjects.length > 0 && (
+            <Reveal>
+              <div className="pt-10 sm:pt-12 border-t border-border/50 mt-2 sm:mt-4">
+                <div className="mb-8 flex flex-col items-start gap-2">
+                  <h3 className="text-2xl font-bold tracking-tight text-foreground">Other Notable Work</h3>
+                  <p className="text-sm text-muted-foreground">Smaller builds, utilities, and commercial side-projects.</p>
+                </div>
+                <ul className="grid gap-4 sm:grid-cols-2">
+                  {additionalProjects.map((p) => (
+                    <li
+                      key={p.title}
+                      className="flex gap-4 rounded-3xl border border-border bg-card p-5 transition-colors hover:border-primary/25 hover:shadow-lg flex-col lg:flex-row"
+                    >
+                      <ProjectIcon name={p.title} className="size-10 text-xs shadow-sm border-border bg-surface" />
+                      <div className="min-w-0 flex flex-col h-full">
+                        <h4 className="font-semibold text-foreground text-lg">{p.title}</h4>
+                        <p className="mt-1 text-pretty text-sm leading-relaxed text-muted-foreground">{p.summary}</p>
+                        
+                        <div className="mt-5 flex flex-col gap-2">
+                          <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-mono">Highlights</span>
+                          <ul className="space-y-2">
+                            {p.highlights.map(h => (
+                              <li key={h} className="text-xs text-muted-foreground flex gap-2 leading-relaxed">
+                                <span className="text-primary/70 mt-0.5 shrink-0">✦</span>
+                                <span>{h}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        <div className="mt-auto pt-6 flex flex-wrap gap-1.5">
+                          {p.technologies.slice(0, 4).map((t) => (
+                            <Tag key={t} className="bg-surface text-[10px] border-border">{t}</Tag>
+                          ))}
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </Reveal>
           )}
         </div>

@@ -21,17 +21,17 @@ export default function Skills() {
           id="skills-title"
           eyebrow="Engineering Capabilities"
           title="The full stack behind a mobile product"
-          description="Grouped by what they enable — from the widget tree to the release pipeline."
+          description="Grouped by what they enable — from the widget tree to the release pipeline. Every item here has shipped in production."
         />
 
-        <div className="mt-8 grid gap-px overflow-hidden rounded-3xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-px overflow-hidden rounded-3xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
           {skillGroups.map((group, i) => {
             const Icon = icons[group.id] || Smartphone
             const isLead = i === 0
             return (
               <Reveal
                 key={group.id}
-                delay={(i % 4) * 60}
+                delay={(i % 3) * 60}
                 className={cn('h-full bg-card', isLead && 'sm:col-span-2 lg:col-span-1')}
               >
                 <div
@@ -73,11 +73,6 @@ export default function Skills() {
               </Reveal>
             )
           })}
-          <div className="hidden bg-card p-7 lg:flex lg:flex-col lg:justify-end">
-            <p className="text-pretty text-sm leading-relaxed text-muted-foreground">
-              Chosen for production — every item here has shipped in a real app.
-            </p>
-          </div>
         </div>
       </Container>
     </section>

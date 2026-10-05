@@ -1,5 +1,5 @@
 import Achievements from "@/components/Achievements";
-import AdditionalProjects from "@/components/AdditionalProjects";
+
 import Contact from "@/components/Contact";
 import Experience from "@/components/Experience";
 import Footer from "@/components/Footer";
@@ -33,8 +33,6 @@ export default function Home() {
         {/* 5. Engineering Capabilities */}
         <Skills />
 
-        {/* 6. Additional Projects: Focused Utilities */}
-        <AdditionalProjects />
 
         {/* 7. Recognition & Milestones: De-duplicated Achievements */}
         <Achievements />
