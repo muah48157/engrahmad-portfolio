@@ -14,53 +14,39 @@ const layers = [
 
 function HeroVisual() {
   return (
-    <div className="relative mx-auto w-full max-w-[420px] lg:max-w-none" aria-hidden="true">
-      <div className="absolute inset-6 rounded-full bg-primary/10 blur-3xl" />
-      <div className="relative mx-auto w-[64%] max-w-[260px] rounded-[2.4rem] border border-foreground/10 bg-foreground p-[6px] shadow-[0_40px_80px_-40px_rgba(15,40,50,0.55)] transition-transform duration-700 hover:-translate-y-1">
-        <div className="relative flex aspect-[9/19.5] flex-col overflow-hidden rounded-[2rem] bg-card">
-          <span className="absolute left-1/2 top-2.5 h-4 w-[32%] -translate-x-1/2 rounded-full bg-foreground" />
+    <div className="relative mx-auto w-full max-w-[420px] lg:max-w-none pt-8 lg:pt-0" aria-hidden="true">
+      {/* Dynamic Glowing Background */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-primary/30 via-emerald-400/20 to-transparent blur-[80px] rounded-full pointer-events-none" />
+      
+      <div className="relative mx-auto w-[64%] max-w-[280px] rounded-[2.4rem] border border-foreground/10 bg-foreground p-[6px] shadow-2xl transition-transform duration-700 hover:-translate-y-2 hover:shadow-primary/20">
+        <div className="relative flex flex-col overflow-hidden rounded-[2rem] bg-card" style={{ aspectRatio: '9 / 19.5' }}>
+          <span className="absolute left-1/2 top-2.5 h-4 w-[32%] -translate-x-1/2 rounded-full bg-foreground z-10" />
+          
           <div className="flex items-center justify-between px-5 pt-10">
             <span className="font-mono text-[10px] text-muted-foreground">lib/</span>
             <FlutterMark className="size-4 text-primary" />
           </div>
-          <p className="px-5 pt-3 text-[13px] font-semibold leading-snug text-foreground">Clean Architecture</p>
-          <p className="px-5 text-[10px] text-muted-foreground">Feature module · auth</p>
+          
+          <p className="px-5 pt-3 text-[14px] font-semibold leading-snug text-foreground">Clean Architecture</p>
+          <p className="px-5 text-[11px] text-muted-foreground">Feature module · auth</p>
 
-          <ol className="mt-4 flex flex-1 flex-col gap-2 px-3.5">
+          <ol className="mt-5 flex flex-1 flex-col gap-2.5 px-4">
             {layers.map((layer, i) => (
-              <li key={layer.name} className="flex items-center gap-2.5 rounded-xl border border-border bg-surface px-2.5 py-2">
-                <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-card text-primary shadow-xs">
-                  <layer.icon className="size-3.5" />
+              <li key={layer.name} className="flex items-center gap-3 rounded-xl border border-border bg-surface px-3 py-2.5 transition-colors hover:border-primary/30">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-card text-primary shadow-sm border border-border">
+                  <layer.icon className="size-4" />
                 </span>
                 <span className="min-w-0">
-                  <span className="block text-[11px] font-semibold text-foreground">{layer.name}</span>
-                  <span className="block truncate text-[9.5px] text-muted-foreground">{layer.detail}</span>
+                  <span className="block text-[12px] font-semibold text-foreground">{layer.name}</span>
+                  <span className="block truncate text-[10px] text-muted-foreground">{layer.detail}</span>
                 </span>
-                <span className="ml-auto font-mono text-[9px] text-muted-foreground">0{i + 1}</span>
               </li>
             ))}
           </ol>
 
-          <div className="m-3.5 flex items-center gap-2 rounded-xl bg-primary px-3 py-2.5 text-primary-foreground">
-            <CheckCircle2 className="size-3.5" />
-            <span className="text-[10.5px] font-medium">Release build passing</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="absolute left-0 top-[14%] rounded-xl border border-border bg-card/95 px-3 py-2.5 shadow-lg shadow-foreground/5 backdrop-blur sm:left-[2%]">
-        <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Targets</p>
-        <p className="mt-0.5 text-xs font-semibold text-foreground">Android · iOS</p>
-      </div>
-
-      <div className="absolute bottom-[16%] right-0 rounded-xl border border-border bg-card/95 px-3 py-2.5 shadow-lg shadow-foreground/5 backdrop-blur sm:right-[2%]">
-        <div className="flex items-center gap-2">
-          <span className="flex size-6 items-center justify-center rounded-md bg-accent text-primary">
-            <Zap className="size-3.5" />
-          </span>
-          <div>
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Load time</p>
-            <p className="text-xs font-semibold text-foreground">~40% faster</p>
+          <div className="m-4 flex items-center gap-2 rounded-xl bg-primary px-3 py-3 text-primary-foreground shadow-lg shadow-primary/30">
+            <CheckCircle2 className="size-4" />
+            <span className="text-[11px] font-medium tracking-wide">Release build passing</span>
           </div>
         </div>
       </div>
@@ -70,64 +56,83 @@ function HeroVisual() {
 
 export default function Hero() {
   return (
-    <section id="home" aria-labelledby="hero-title" className="relative overflow-hidden">
-      <div
-        aria-hidden="true"
-        className="bg-grid pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_70%_60%_at_70%_30%,black,transparent)]"
-      />
-      <Container className="relative grid items-center gap-10 pb-12 pt-8 sm:pt-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10 lg:pb-14 lg:pt-12">
-        <div>
-          <p className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
+    <section id="home" aria-labelledby="hero-title" className="relative overflow-hidden bg-background">
+      {/* Decorative Grid and Gradients */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" aria-hidden="true" />
+      <div className="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" aria-hidden="true" />
+
+      <Container className="relative grid items-center gap-12 pb-16 pt-16 sm:pt-24 lg:grid-cols-[1fr_0.9fr] lg:gap-8 lg:pb-24 lg:pt-28">
+        <div className="flex flex-col items-start">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-medium text-primary backdrop-blur-sm">
             <span className="relative flex size-2">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary/50 motion-reduce:animate-none" />
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary/60 motion-reduce:animate-none" />
               <span className="relative inline-flex size-2 rounded-full bg-primary" />
             </span>
             Open to remote opportunities worldwide
-          </p>
+          </div>
 
-          <h1 id="hero-title" className="mt-6 text-balance text-[2.6rem] font-semibold leading-[1.05] tracking-tight text-foreground sm:text-6xl lg:text-[3.5rem] xl:text-[4rem]">
-            {"Hi, I'm"}
-            <span className="block text-primary">Muhammad Ahmad</span>
+          <h1 id="hero-title" className="mt-8 text-balance text-5xl font-bold leading-[1.1] tracking-tight text-foreground sm:text-6xl lg:text-[4rem] xl:text-[4.5rem]">
+             Hi, I'm <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-600">
+              Muhammad Ahmad
+            </span>
           </h1>
 
-          <p className="mt-4 max-w-xl text-pretty text-base leading-relaxed text-foreground sm:text-lg font-medium">
+          <p className="mt-6 max-w-xl text-pretty text-lg font-medium text-foreground sm:text-xl">
             Flutter Developer / Mobile Software Engineer
           </p>
 
-          <p className="mt-2 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground">
+          <p className="mt-3 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
             I build production-ready mobile applications with Flutter, from scalable
             architecture and APIs to payments, maps, backend integrations, and dual-store
             deployment.
           </p>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row flex-wrap">
+          <div className="mt-8 flex flex-col gap-4 w-full sm:w-auto sm:flex-row flex-wrap">
             <LinkButton 
               href="#projects" 
+              className="px-6 py-6 text-sm bg-primary text-primary-foreground hover:bg-primary/90 rounded-full shadow-lg shadow-primary/25 transition-all hover:scale-105"
               onClick={() => trackEvent("project_open", { location: "hero_primary" })}
             >
               View My Work
-              <ArrowUpRight aria-hidden="true" />
+              <ArrowUpRight className="ml-2 size-4" aria-hidden="true" />
             </LinkButton>
             <LinkButton 
               href="/resume.pdf" 
               variant="outline" 
+              className="px-6 py-6 text-sm rounded-full border-border bg-card hover:bg-accent transition-all"
               target="_blank" 
               rel="noopener noreferrer"
               onClick={() => trackEvent("resume_download", { mode: "view", location: "hero" })}
             >
               View Resume
-              <ArrowUpRight aria-hidden="true" />
+              <ArrowUpRight className="ml-2 size-4" aria-hidden="true" />
             </LinkButton>
             <LinkButton 
               href="/resume.pdf" 
               variant="outline" 
+              className="px-6 py-6 text-sm rounded-full border-border bg-card hover:bg-accent transition-all"
               download="Muhammad_Ahmad_Resume.pdf"
               onClick={() => trackEvent("resume_download", { mode: "download", location: "hero" })}
             >
-              Download Resume
-              <Download aria-hidden="true" />
+              <Download className="mr-2 size-4" aria-hidden="true" />
+              Download PDF
             </LinkButton>
           </div>
+          
+          {/* Replaced floating widgets with elegant inline stats */}
+          <div className="mt-12 flex items-center gap-6 text-sm font-medium text-muted-foreground border-t border-border/50 pt-6">
+            <div className="flex items-center gap-2">
+              <Smartphone className="size-4 text-primary" />
+              <span>Android & iOS Ready</span>
+            </div>
+            <div className="w-1 h-1 rounded-full bg-border" />
+            <div className="flex items-center gap-2">
+              <Zap className="size-4 text-primary" />
+              <span>High Performance</span>
+            </div>
+          </div>
+
         </div>
 
         <HeroVisual />

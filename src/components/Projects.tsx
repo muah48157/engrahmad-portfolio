@@ -28,11 +28,6 @@ export function ProjectIcon({ name, className }: { name: string; className?: str
 
 function ProjectMeta({ project }: { project: ProjectItem }) {
   const PlatformIcon = project.platform === 'desktop' ? Monitor : Smartphone
-  const caseStudyRows = [
-    { label: 'Challenge', value: project.caseStudy?.challenge },
-    { label: 'Approach', value: project.caseStudy?.architecture[0] },
-    { label: 'Result', value: project.caseStudy?.outcomes[0] },
-  ]
   
   return (
     <div className="flex h-full flex-col">
@@ -49,36 +44,30 @@ function ProjectMeta({ project }: { project: ProjectItem }) {
 
       <p className="mt-5 text-pretty leading-relaxed text-muted-foreground">{project.summary}</p>
 
-      <p className="mt-4 text-xs text-muted-foreground">
+      <p className="mt-5 text-xs text-muted-foreground">
         <span className="uppercase tracking-wider">Role</span>
         <span className="mx-2 text-border" aria-hidden="true">
           /
         </span>
-        <span className="font-medium text-foreground">{project.ownership.slice(0, 50)}...</span>
+        <span className="font-medium text-foreground">{project.ownership.slice(0, 60)}...</span>
       </p>
 
-      <dl className="mt-5 divide-y divide-primary/10 rounded-xl border border-primary/15 bg-accent/50 text-sm">
-        {caseStudyRows.map((row) => (
-          <div key={row.label} className="grid gap-1 px-4 py-3 sm:grid-cols-[96px_1fr] sm:gap-3">
-            <dt className="text-[11px] font-medium uppercase tracking-wider text-primary sm:pt-0.5">{row.label}</dt>
-            <dd className="text-pretty leading-relaxed text-foreground">{row.value}</dd>
-          </div>
-        ))}
-      </dl>
-
-      <ul className="mt-5 flex flex-wrap gap-1.5" aria-label="Technologies">
-        {project.technologies.slice(0, 5).map((t) => (
-          <li key={t}>
-            <Tag>{t}</Tag>
-          </li>
-        ))}
-      </ul>
+      <div className="mt-6">
+        <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-3 font-mono">Core Stack</p>
+        <ul className="flex flex-wrap gap-1.5" aria-label="Technologies">
+          {project.technologies.slice(0, 5).map((t) => (
+            <li key={t}>
+              <Tag className="bg-surface">{t}</Tag>
+            </li>
+          ))}
+        </ul>
+      </div>
 
       {project.caseStudyPath && (
-        <div className="mt-auto pt-6">
+        <div className="mt-auto pt-8 pb-2">
           <Link
             href={project.caseStudyPath}
-            className="group/cta inline-flex items-center gap-2 text-sm font-medium text-primary"
+            className="group/cta inline-flex h-10 items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground shadow-sm transition-all hover:bg-primary/90 hover:scale-105"
           >
             Read Case Study
             <ArrowRight className="size-4 transition-transform group-hover/cta:translate-x-1" aria-hidden="true" />
@@ -93,10 +82,10 @@ function ProjectMeta({ project }: { project: ProjectItem }) {
 function PhoneGallery({ project, count }: { project: ProjectItem; count: number }) {
   const screenshots = getProjectGallery(project)
   return (
-    <div className="relative h-full overflow-hidden rounded-2xl border border-border bg-surface">
-      <div aria-hidden="true" className="bg-grid absolute inset-0 opacity-50 [mask-image:linear-gradient(to_bottom,black,transparent)]" />
+    <div className="relative h-full w-full min-h-[380px] flex flex-col items-center justify-center overflow-hidden rounded-2xl border border-border bg-surface/50">
+      <div aria-hidden="true" className="bg-grid absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_70%_70%_at_50%_50%,black,transparent)]" />
       <ul
-        className="relative flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 py-8 [scrollbar-width:none] sm:justify-center sm:overflow-visible sm:px-6 sm:py-10 [&::-webkit-scrollbar]:hidden"
+        className="relative w-full flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 py-8 [scrollbar-width:none] sm:justify-center sm:overflow-visible sm:px-6 sm:py-10 [&::-webkit-scrollbar]:hidden"
         aria-label={`${project.title} screenshots`}
       >
         {Array.from({ length: count }).map((_, i) => (
@@ -123,11 +112,11 @@ function PhoneGallery({ project, count }: { project: ProjectItem; count: number 
 
 function FeaturedMobileWide({ project }: { project: ProjectItem }) {
   return (
-    <article className="group grid gap-6 rounded-3xl border border-border bg-card p-4 transition-all duration-300 hover:border-primary/25 hover:shadow-[0_30px_60px_-40px_rgba(15,40,50,0.35)] sm:p-6 lg:grid-cols-[0.85fr_1.15fr] lg:gap-10 lg:p-8">
+    <article className="group grid gap-6 rounded-3xl border border-border bg-card p-4 transition-all duration-300 hover:border-primary/40 hover:shadow-2xl sm:p-6 lg:grid-cols-[0.85fr_1.15fr] lg:gap-10 lg:p-8">
       <div className="order-2 px-1 pb-2 lg:order-1 lg:px-0 lg:pb-0">
         <ProjectMeta project={project} />
       </div>
-      <div className="order-1 lg:order-2">
+      <div className="order-1 lg:order-2 h-full">
         <PhoneGallery project={project} count={3} />
       </div>
     </article>
@@ -136,7 +125,7 @@ function FeaturedMobileWide({ project }: { project: ProjectItem }) {
 
 function FeaturedMobileCompact({ project }: { project: ProjectItem }) {
   return (
-    <article className="group flex h-full flex-col gap-6 rounded-3xl border border-border bg-card p-4 transition-all duration-300 hover:border-primary/25 hover:shadow-[0_30px_60px_-40px_rgba(15,40,50,0.35)] sm:p-6">
+    <article className="group flex h-full flex-col gap-6 rounded-3xl border border-border bg-card p-4 transition-all duration-300 hover:border-primary/40 hover:shadow-2xl sm:p-6">
       <PhoneGallery project={project} count={2} />
       <div className="flex-1 px-1 pb-2">
         <ProjectMeta project={project} />
@@ -148,13 +137,14 @@ function FeaturedMobileCompact({ project }: { project: ProjectItem }) {
 function FeaturedDesktop({ project }: { project: ProjectItem }) {
   const screenshots = getProjectGallery(project)
   return (
-    <article className="group grid gap-6 rounded-3xl border border-border bg-card p-4 transition-all duration-300 hover:border-primary/25 hover:shadow-[0_30px_60px_-40px_rgba(15,40,50,0.35)] sm:p-6 lg:grid-cols-[1.35fr_0.65fr] lg:gap-10 lg:p-8">
-      <div className="rounded-2xl border border-border bg-surface p-3 sm:p-6">
+    <article className="group grid gap-6 rounded-3xl border border-border bg-card p-4 transition-all duration-300 hover:border-primary/40 hover:shadow-2xl sm:p-6 lg:grid-cols-[1.35fr_0.65fr] lg:gap-10 lg:p-8">
+      <div className="flex items-center justify-center rounded-2xl border border-border bg-surface/50 p-6 sm:p-10 min-h-[380px] relative overflow-hidden">
+        <div aria-hidden="true" className="bg-grid absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_70%_70%_at_50%_50%,black,transparent)]" />
         <DesktopFrame
           src={screenshots[0]?.path}
           alt={screenshots[0]?.alt || `${project.title} desktop application`}
           title={project.title}
-          className="transition-transform duration-500 group-hover:-translate-y-1"
+          className="relative transition-transform duration-500 group-hover:-translate-y-2 z-10"
         />
       </div>
       <div className="px-1 pb-2 lg:px-0 lg:pb-0">
@@ -167,7 +157,7 @@ function FeaturedDesktop({ project }: { project: ProjectItem }) {
 export default function Projects() {
   const [first, second, third, desktop] = featuredProjects
   return (
-    <section id="projects" aria-labelledby="projects-title" className="border-t border-border bg-background py-12 sm:py-16">
+    <section id="projects" aria-labelledby="projects-title" className="border-t border-border bg-background py-16 sm:py-24">
       <Container>
         <SectionHeading
           id="projects-title"
@@ -175,25 +165,26 @@ export default function Projects() {
           title="Selected Work"
           description="A selection of production applications and engineering work."
           action={
-            <p className="flex items-center gap-4 text-xs text-muted-foreground">
+            <p className="flex items-center gap-4 text-xs font-medium text-muted-foreground bg-surface px-4 py-2 rounded-full border border-border">
               <span className="flex items-center gap-1.5">
-                <Smartphone className="size-3.5" aria-hidden="true" /> 3 Mobile
+                <Smartphone className="size-3.5 text-primary" aria-hidden="true" /> 3 Mobile
               </span>
+              <span className="text-border">|</span>
               <span className="flex items-center gap-1.5">
-                <Monitor className="size-3.5" aria-hidden="true" /> 1 Desktop
+                <Monitor className="size-3.5 text-primary" aria-hidden="true" /> 1 Desktop
               </span>
             </p>
           }
         />
 
-        <div className="mt-8 flex flex-col gap-6 lg:gap-8">
+        <div className="mt-12 flex flex-col gap-8 lg:gap-10">
           {first && (
             <Reveal>
               <FeaturedMobileWide project={first} />
             </Reveal>
           )}
           
-          <div className="grid gap-6 md:grid-cols-2 lg:gap-8">
+          <div className="grid gap-8 md:grid-cols-2 lg:gap-10">
             {second && (
               <Reveal className="h-full">
                 <FeaturedMobileCompact project={second} />

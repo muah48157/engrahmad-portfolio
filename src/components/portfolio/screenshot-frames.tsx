@@ -33,7 +33,7 @@ export function PhoneFrame({
         className,
       )}
     >
-      <div className="relative aspect-[9/19.5] overflow-hidden rounded-[1.65rem] bg-card">
+      <div className="relative overflow-hidden rounded-[1.65rem] bg-card" style={{ aspectRatio: '9 / 19.5' }}>
         {src ? (
           <Image src={src} alt={alt} fill sizes="(max-width: 768px) 45vw, 220px" className="object-cover object-top" />
         ) : (

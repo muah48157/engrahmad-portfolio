@@ -13,9 +13,6 @@ import Testimonial from "@/components/Testimonial";
 export default function Home() {
   return (
     <>
-      <a className="skip-link" href="#main-content">
-        Skip to content
-      </a>
       <Navbar />
       <main id="main-content">
         {/* 1. Hero: 3-Second Legibility & Core Stack */}
