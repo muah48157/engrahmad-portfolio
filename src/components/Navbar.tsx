@@ -12,6 +12,7 @@ const profile = { name: "Muhammad Ahmad", initials: "MA" };
 
 const navItems = [
   { label: "Projects", href: "/#projects" },
+  { label: "Services", href: "/services" },
   { label: "Experience", href: "/#experience" },
   { label: "Skills", href: "/#skills" },
   { label: "Achievements", href: "/#achievements" },
@@ -154,64 +155,65 @@ export default function Navbar() {
         </div>
       </Container>
 
-      <div
-        id="mobile-nav"
-        ref={mobileMenuRef}
-        hidden={!open}
-        className="fixed inset-x-0 top-16 bottom-0 overflow-y-auto border-t border-border bg-background lg:hidden"
-      >
-        <Container className="flex h-full flex-col py-6">
-          <nav aria-label="Mobile">
-            <ul className="flex flex-col">
-              {navItems.map((item, i) => (
-                <li key={item.href} className="border-b border-border">
-                  <Link
-                    href={item.href}
-                    onClick={closeMenu}
-                    className="flex items-center justify-between py-4 text-lg font-medium text-foreground transition-colors hover:text-primary"
-                  >
-                    {item.label}
-                    <span className="font-mono text-xs text-muted-foreground">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-          
-          <div className="mt-auto pt-8 flex flex-col gap-3">
-            <Link
-              href="/#contact"
-              onClick={() => {
-                closeMenu();
-                trackEvent("email_click", { location: "navbar_mobile_cta" });
-              }}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-primary text-sm font-medium text-primary-foreground"
-            >
-              Let&apos;s Talk
-              <ArrowUpRight className="size-4" aria-hidden="true" />
-            </Link>
+      {open && (
+        <div
+          id="mobile-nav"
+          ref={mobileMenuRef}
+          className="fixed inset-x-0 top-16 bottom-0 z-[100] overflow-y-auto border-t border-border bg-background lg:hidden"
+        >
+          <Container className="flex h-full flex-col py-6">
+            <nav aria-label="Mobile">
+              <ul className="flex flex-col">
+                {navItems.map((item, i) => (
+                  <li key={item.href} className="border-b border-border">
+                    <Link
+                      href={item.href}
+                      onClick={closeMenu}
+                      className="flex items-center justify-between py-4 text-lg font-medium text-foreground transition-colors hover:text-primary"
+                    >
+                      {item.label}
+                      <span className="font-mono text-xs text-muted-foreground">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
             
-            <a
-              href="/resume.pdf"
-              download="Muhammad_Ahmad_Resume.pdf"
-              onClick={() => {
-                closeMenu();
-                trackEvent("resume_download", {
-                  mode: "download",
-                  location: "navbar_mobile",
-                });
-              }}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-border bg-card text-sm font-medium text-foreground"
-              aria-label="Download Muhammad Ahmad's Resume (PDF)"
-            >
-              Download Resume
-              <Download className="size-4" aria-hidden="true" />
-            </a>
-          </div>
-        </Container>
-      </div>
+            <div className="mt-auto pt-8 flex flex-col gap-3">
+              <Link
+                href="/#contact"
+                onClick={() => {
+                  closeMenu();
+                  trackEvent("email_click", { location: "navbar_mobile_cta" });
+                }}
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-primary text-sm font-medium text-primary-foreground"
+              >
+                Let&apos;s Talk
+                <ArrowUpRight className="size-4" aria-hidden="true" />
+              </Link>
+              
+              <a
+                href="/resume.pdf"
+                download="Muhammad_Ahmad_Resume.pdf"
+                onClick={() => {
+                  closeMenu();
+                  trackEvent("resume_download", {
+                    mode: "download",
+                    location: "navbar_mobile",
+                  });
+                }}
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-border bg-card text-sm font-medium text-foreground"
+                aria-label="Download Muhammad Ahmad's Resume (PDF)"
+              >
+                Download Resume
+                <Download className="size-4" aria-hidden="true" />
+              </a>
+            </div>
+          </Container>
+        </div>
+      )}
     </header>
   );
 }

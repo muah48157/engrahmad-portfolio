@@ -105,6 +105,9 @@ const personSchema = {
   },
 };
 
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
@@ -122,7 +125,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="flex min-h-full flex-col">
         <WebVitalsReporter />
+        <Navbar />
         {children}
+        <Footer />
       </body>
     </html>
   );
